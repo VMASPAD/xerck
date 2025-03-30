@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Xerck
 
-## Getting Started
+Accessible and customizable components that you can copy and paste into your apps. Free. Open Source. **Use this to build your own component library**.
 
-First, run the development server:
+![hero](https://portfoliotavm.com/imagevscode/xerck.svg)
+
+## 🚀 Features
+
+- **Accessible**: All components follow best accessibility practices
+- **Customizable**: Easy to adapt to your design system
+- **Reusable**: Copy and paste components directly into your projects
+- **Lightweight**: No unnecessary dependencies
+- **Modern**: Built with the latest web technologies
+
+## 📦 Installation
+
+No installation needed. Simply copy the components you need and paste them into your project.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Optional: Clone the repository to get all components
+git clone https://github.com/vmaspad/xerck.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🔨 Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Each component comes with its own file that you can import directly into your project:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```jsx
+import { Button } from './components/Button';
 
-## Learn More
+function App() {
+  return (
+    <Button variant="primary">Click me</Button>
+  );
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📚 Available Components
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Button**: Primary, secondary, and tertiary buttons
+- **Card**: Information containers
+- **Input**: Text fields, text areas, etc.
+- **Modal**: Accessible modal windows
+- **Dropdown**: Dropdown menus
+- **Tabs**: Tab system
+- **Toast**: Non-intrusive notifications
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+Contributions are welcome. Please follow these steps:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+ 
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Developed with ❤️ by [VMASPAD](https://portfoliotavm.com/)
