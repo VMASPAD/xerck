@@ -87,7 +87,7 @@ export const Default: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [activeTab, setActiveTab] = React.useState("tab1");
+    const [activeTab, setActiveTab] = useState("tab1");
     
     return (
       <div className="space-y-6 w-[400px]">

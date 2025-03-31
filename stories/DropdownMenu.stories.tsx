@@ -15,8 +15,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
-} from "./DropdownMenu";
-import { Button } from "./Button";
+} from "../components/ui/DropdownMenu";
+import { Button } from "../components/ui/button";
 import { User, CreditCard, Settings, LogOut, Mail, Plus, Cloud, Github, LifeBuoy } from "lucide-react";
 
 const meta: Meta<typeof DropdownMenu> = {
@@ -85,9 +85,9 @@ export const Default: Story = {
 
 export const WithCheckboxItems: Story = {
   render: (args) => {
-    const [showStatusBar, setShowStatusBar] = React.useState(true);
-    const [showActivityBar, setShowActivityBar] = React.useState(false);
-    const [showPanel, setShowPanel] = React.useState(false);
+    const [showStatusBar, setShowStatusBar] = useState(true);
+    const [showActivityBar, setShowActivityBar] = useState(false);
+    const [showPanel, setShowPanel] = useState(false);
 
     return (
       <DropdownMenu {...args}>
@@ -131,7 +131,7 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioItems: Story = {
   render: (args) => {
-    const [position, setPosition] = React.useState("bottom");
+    const [position, setPosition] = useState("bottom");
 
     return (
       <DropdownMenu {...args}>
@@ -214,7 +214,7 @@ export const WithSubmenus: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     return (
       <div className="flex flex-col items-center gap-4">

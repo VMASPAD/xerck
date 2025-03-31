@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
-import "../app/globals.css";
+import "../../app/globals.css";
 import { ChevronDown, Plus, Minus } from 'lucide-react';
 
 // Contexto para manejar el estado del acordeón

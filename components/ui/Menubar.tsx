@@ -104,8 +104,8 @@ interface MenubarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
   ({ className, children, ...props }, ref) => {
-    const [activeMenu, setActiveMenu] = React.useState<string | null>(null)
-    const [openMenus, setOpenMenus] = React.useState<Set<string>>(new Set())
+    const [activeMenu, setActiveMenu] = useState<string | null>(null)
+    const [openMenus, setOpenMenus] = useState<Set<string>>(new Set())
     const menuIds = React.useRef<Set<string>>(new Set())
 
     const registerMenu = React.useCallback((id: string) => {
@@ -232,7 +232,7 @@ function MenubarGroup({ ...props }: React.HTMLAttributes<HTMLDivElement>) {
 
 // Portal para renderizar fuera del DOM
 function MenubarPortal({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   
   React.useEffect(() => {
     setMounted(true)
@@ -265,7 +265,7 @@ interface MenubarSubProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function MenubarSub({ children, ...props }: MenubarSubProps) {
   const id = React.useId()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const triggerRef = React.useRef<HTMLElement>(null)
   
   const contextValue = React.useMemo(() => ({
@@ -416,7 +416,7 @@ const MenubarSubContent = React.forwardRef<HTMLDivElement, MenubarSubContentProp
   ({ className, ...props }, ref) => {
     const { id, open, triggerRef } = useSubMenu()
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Calcular posición del submenú
     React.useEffect(() => {
@@ -507,7 +507,7 @@ const MenubarContent = React.forwardRef<HTMLDivElement, MenubarContentProps>(
   }, ref) => {
     const { id, open, triggerRef } = useMenu()
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Calcular la posición del menú
     React.useEffect(() => {

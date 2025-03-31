@@ -86,14 +86,14 @@ const Select = ({
   onSearch,
   position = "popper"
 }: SelectProps) => {
-  const [open, setOpen] = React.useState(false)
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue || "")
-  const [searchValue, setSearchValue] = React.useState("")
-  const [scrollUpVisible, setScrollUpVisible] = React.useState(false)
-  const [scrollDownVisible, setScrollDownVisible] = React.useState(false)
-  const [valueNode, setValueNode] = React.useState<React.ReactNode>(placeholder)
-  const [options, setOptions] = React.useState<Map<string, HTMLDivElement>>(new Map())
-  const [activeDescendant, setActiveDescendant] = React.useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue || "")
+  const [searchValue, setSearchValue] = useState("")
+  const [scrollUpVisible, setScrollUpVisible] = useState(false)
+  const [scrollDownVisible, setScrollDownVisible] = useState(false)
+  const [valueNode, setValueNode] = useState<React.ReactNode>(placeholder)
+  const [options, setOptions] = useState<Map<string, HTMLDivElement>>(new Map())
+  const [activeDescendant, setActiveDescendant] = useState<string | null>(null)
   
   const isControlled = controlledValue !== undefined
   const value = isControlled ? controlledValue : uncontrolledValue
@@ -512,9 +512,9 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
       triggerRef,
       position: contextPosition,
     } = useSelectContext()
-    const [mounted, setMounted] = React.useState(false)
-    const [position, setPosition] = React.useState({ top: 0, left: 0, width: 0 })
-    const [side, setSide] = React.useState<"top" | "bottom">("bottom")
+    const [mounted, setMounted] = useState(false)
+    const [position, setPosition] = useState({ top: 0, left: 0, width: 0 })
+    const [side, setSide] = useState<"top" | "bottom">("bottom")
     
     const position_ = positionProp || contextPosition
     

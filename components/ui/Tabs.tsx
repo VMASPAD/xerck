@@ -33,7 +33,7 @@ const Tabs = ({
   ...props
 }: TabsProps) => {
   // Estado controlado vs no controlado
-  const [selectedTab, setSelectedTab] = React.useState(value || defaultValue || "")
+  const [selectedTab, setSelectedTab] = useState(value || defaultValue || "")
   
   const isControlled = value !== undefined
   const currentValue = isControlled ? value : selectedTab

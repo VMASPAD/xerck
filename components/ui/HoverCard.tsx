@@ -45,7 +45,7 @@ const HoverCard = ({
   openDelay = 700,
   closeDelay = 300
 }: HoverCardProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const triggerRef = React.useRef<HTMLElement>(null)
   const openTimerRef = React.useRef<NodeJS.Timeout | null>(null)
   const closeTimerRef = React.useRef<NodeJS.Timeout | null>(null)
@@ -199,8 +199,8 @@ const HoverCardContent = React.forwardRef<HTMLDivElement, HoverCardContentProps>
       handleClose: () => void
     }
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
-    const [mounted, setMounted] = React.useState(false)
+    const [position, setPosition] = useState({ top: 0, left: 0 })
+    const [mounted, setMounted] = useState(false)
     
     React.useEffect(() => {
       setMounted(true)

@@ -5,7 +5,7 @@ import {
   CollapsibleContent, 
   CollapsibleTrigger 
 } from "../components/ui/Collapsible";
-import { Button } from "./Button";
+import { Button } from "../components/ui/button";
 import { Terminal } from "lucide-react";
 
 const meta: Meta<typeof Collapsible> = {
@@ -98,7 +98,7 @@ export const WithoutIcon: Story = {
 // Ejemplo controlado mejorado con el componente Button
 export const ControlledExample: Story = {
   render: () => {
-    const [isOpen, setIsOpen] = React.useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     
     return (
       <div className="w-80 space-y-4">

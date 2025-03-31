@@ -49,12 +49,12 @@ const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
     const verticalTrackRef = React.useRef<HTMLDivElement>(null)
     const horizontalTrackRef = React.useRef<HTMLDivElement>(null)
     
-    const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = React.useState(false)
-    const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = React.useState(false)
-    const [isDraggingVertical, setIsDraggingVertical] = React.useState(false)
-    const [isDraggingHorizontal, setIsDraggingHorizontal] = React.useState(false)
-    const [isHoveringScrollbar, setIsHoveringScrollbar] = React.useState(false)
-    const [showScrollbars, setShowScrollbars] = React.useState(false)
+    const [isVerticalScrollbarVisible, setIsVerticalScrollbarVisible] = useState(false)
+    const [isHorizontalScrollbarVisible, setIsHorizontalScrollbarVisible] = useState(false)
+    const [isDraggingVertical, setIsDraggingVertical] = useState(false)
+    const [isDraggingHorizontal, setIsDraggingHorizontal] = useState(false)
+    const [isHoveringScrollbar, setIsHoveringScrollbar] = useState(false)
+    const [showScrollbars, setShowScrollbars] = useState(false)
     
     const scrollbarStyles = {
       track: {

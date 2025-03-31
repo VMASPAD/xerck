@@ -101,7 +101,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     ...props
   }, ref) => {
     // Estado para el valor controlado o no controlado
-    const [internalValue, setInternalValue] = React.useState<number | [number, number]>(
+    const [internalValue, setInternalValue] = useState<number | [number, number]>(
       value !== undefined 
         ? value 
         : defaultValue !== undefined 

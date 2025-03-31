@@ -15,7 +15,7 @@ interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, ...props }, ref) => {
-    const [checked, setChecked] = React.useState(props.defaultChecked || false);
+    const [checked, setChecked] = useState(props.defaultChecked || false);
     const internalRef = React.useRef<HTMLInputElement>(null);
 
     // Manejar el cambio interno y llamar al controlador de eventos externo si existe

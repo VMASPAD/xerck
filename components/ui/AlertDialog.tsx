@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import "../app/globals.css";
+import "../../app/globals.css";
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

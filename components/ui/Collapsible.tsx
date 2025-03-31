@@ -40,7 +40,7 @@ const CollapsibleContext = React.createContext<{
 
 const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
   ({ children, className, open, defaultOpen = false, onOpenChange, disabled, ...props }, ref) => {
-    const [isOpen, setIsOpen] = React.useState(defaultOpen);
+    const [isOpen, setIsOpen] = useState(defaultOpen);
     
     const handleOpenChange = React.useCallback((value: boolean) => {
       if (disabled) return;
@@ -142,8 +142,8 @@ const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentPr
   ({ className, children, ...props }, ref) => {
     const { open } = useCollapsibleContext();
     const contentRef = React.useRef<HTMLDivElement>(null);
-    const [height, setHeight] = React.useState<number | undefined>(undefined);
-    const [isInitialRender, setIsInitialRender] = React.useState(true);
+    const [height, setHeight] = useState<number | undefined>(undefined);
+    const [isInitialRender, setIsInitialRender] = useState(true);
     
     // Medir la altura del contenido
     React.useEffect(() => {

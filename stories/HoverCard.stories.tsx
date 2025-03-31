@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/ui/HoverCard";
 import { CalendarDays } from "lucide-react";
-import { Button } from "./Button";
+import { Button } from "../components/ui/button";
 
 const meta: Meta<typeof HoverCard> = {
   title: "Components/HoverCard",
@@ -134,7 +134,7 @@ export const Positioning: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     
     return (
       <div className="flex flex-col items-center gap-4">

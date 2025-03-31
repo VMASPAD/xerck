@@ -2,7 +2,7 @@ import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { Label } from "../components/ui/Label";
 import { Input } from "../components/ui/Input";
-import Checkbox from "./Checkbox";
+import Checkbox from "../components/ui/Checkbox";
 
 const meta: Meta<typeof Label> = {
   title: "Components/Label",

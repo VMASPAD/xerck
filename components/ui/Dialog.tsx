@@ -43,7 +43,7 @@ const Dialog = ({
   onOpenChange,
   closeOnOutsideClick = true // Por defecto se cierra al hacer clic fuera
 }: DialogProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   
   const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen
   
@@ -114,7 +114,7 @@ DialogTrigger.displayName = "DialogTrigger"
 
 // Portal para renderizar el diálogo fuera de la jerarquía del DOM
 const DialogPortal = ({ children }: { children: React.ReactNode }) => {
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   
   React.useEffect(() => {
     setMounted(true)
@@ -210,7 +210,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
     }
     
     // Crear un estado para controlar la animación de salida
-    const [isAnimating, setIsAnimating] = React.useState(false)
+    const [isAnimating, setIsAnimating] = useState(false)
     
     // Detectar cambios en el estado de apertura para animar
     React.useEffect(() => {

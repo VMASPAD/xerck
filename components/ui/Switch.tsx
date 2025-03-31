@@ -69,7 +69,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
     const switchId = id || `switch-${uniqueId}`;
     
     // Estado interno para el modo no controlado
-    const [internalChecked, setInternalChecked] = React.useState<boolean>(
+    const [internalChecked, setInternalChecked] = useState<boolean>(
       checked !== undefined ? checked : defaultChecked || false
     );
     

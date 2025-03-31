@@ -74,10 +74,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   defaultOpen = false,
   onOpenChange,
 }) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
-  const [subMenus, setSubMenus] = React.useState<Map<string, { open: boolean }>>(new Map())
-  const [activeItem, setActiveItem] = React.useState(-1)
-  const [itemCount, setItemCount] = React.useState(0)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
+  const [subMenus, setSubMenus] = useState<Map<string, { open: boolean }>>(new Map())
+  const [activeItem, setActiveItem] = useState(-1)
+  const [itemCount, setItemCount] = useState(0)
   
   const triggerRef = React.useRef<HTMLElement>(null)
   
@@ -266,7 +266,7 @@ DropdownMenuTrigger.displayName = "DropdownMenuTrigger"
 
 // Portal
 const DropdownMenuPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   
   React.useEffect(() => {
     setMounted(true)
@@ -290,7 +290,7 @@ const DropdownMenuContent = React.forwardRef<HTMLDivElement, DropdownMenuContent
   ({ className, sideOffset = 4, align = "center", alignOffset = 0, ...props }, ref) => {
     const { open, triggerRef } = useDropdownMenu()
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Calcular la posición del menú
     React.useEffect(() => {
@@ -384,7 +384,7 @@ const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>
   ({ className, inset, disabled, onSelect, children, ...props }, ref) => {
     const { setOpen, activeItem, setActiveItem } = useDropdownMenu()
     const itemRef = React.useRef<HTMLDivElement>(null)
-    const [itemIndex, setItemIndex] = React.useState(-1)
+    const [itemIndex, setItemIndex] = useState(-1)
     
     // Registrar este item en el menú
     React.useEffect(() => {
@@ -705,7 +705,7 @@ const DropdownMenuSubContent = React.forwardRef<HTMLDivElement, DropdownMenuSubC
     const { isSubMenuOpen } = useDropdownMenu()
     const isOpen = isSubMenuOpen(id)
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Calcular la posición del submenú
     React.useEffect(() => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import {
   ContextMenu,
@@ -78,9 +78,9 @@ export const Default: Story = {
 
 export const WithCheckboxItems: Story = {
   render: () => {
-    const [showStatusBar, setShowStatusBar] = React.useState(true);
-    const [showActivityBar, setShowActivityBar] = React.useState(false);
-    const [showPanel, setShowPanel] = React.useState(false);
+    const [showStatusBar, setShowStatusBar] = useState(true);
+    const [showActivityBar, setShowActivityBar] = useState(false);
+    const [showPanel, setShowPanel] = useState(false);
     
     return (
       <ContextMenu>
@@ -119,7 +119,7 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioItems: Story = {
   render: () => {
-    const [position, setPosition] = React.useState("bottom");
+    const [position, setPosition] = useState("bottom");
     
     return (
       <ContextMenu>

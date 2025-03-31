@@ -180,7 +180,7 @@ export const BottomSide: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     
     return (
       <>
@@ -234,8 +234,8 @@ export const Controlled: Story = {
 
 export const MultiStep: Story = {
   render: () => {
-    const [step, setStep] = React.useState(1);
-    const [open, setOpen] = React.useState(false);
+    const [step, setStep] = useState(1);
+    const [open, setOpen] = useState(false);
     
     return (
       <>

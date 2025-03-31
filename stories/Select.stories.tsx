@@ -25,7 +25,7 @@ type Story = StoryObj<typeof Select>;
 
 export const Default: Story = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = useState("");
     
     return (
       <Select value={value} onValueChange={setValue}>
@@ -46,7 +46,7 @@ export const Default: Story = {
 
 export const WithGroups: Story = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = useState("");
     
     return (
       <Select value={value} onValueChange={setValue}>
@@ -154,7 +154,7 @@ export const WithManyOptions: Story = {
 
 export const WithForm: Story = {
   render: () => {
-    const [formData, setFormData] = React.useState({
+    const [formData, setFormData] = useState({
       country: "",
       city: "",
     });
@@ -232,7 +232,7 @@ export const WithForm: Story = {
 
 export const Customized: Story = {
   render: () => {
-    const [value, setValue] = React.useState("");
+    const [value, setValue] = useState("");
     
     return (
       <Select value={value} onValueChange={setValue}>

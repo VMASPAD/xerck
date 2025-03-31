@@ -45,7 +45,7 @@ interface SheetProps {
 }
 
 const Sheet = ({ children, open: controlledOpen, onOpenChange, defaultOpen = false }: SheetProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const id = React.useId()
   
   const isControlled = controlledOpen !== undefined
@@ -147,7 +147,7 @@ type SheetPortalProps = {
 }
 
 const SheetPortal = ({ children, container }: SheetPortalProps) => {
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   
   React.useEffect(() => {
     setMounted(true)
@@ -200,7 +200,7 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
   ({ side = "right", className, children, ...props }, ref) => {
     const { open, setOpen, id } = useSheet()
     const contentRef = React.useRef<HTMLDivElement>(null)
-    const [isMounted, setIsMounted] = React.useState(false)
+    const [isMounted, setIsMounted] = useState(false)
     
     // Manejar el cierre con la tecla Escape
     React.useEffect(() => {

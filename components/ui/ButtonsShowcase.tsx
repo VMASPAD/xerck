@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from './Button';
+import { Button } from '@/components/ui/button';
 
 export const ButtonsShowcase = () => {
   return (

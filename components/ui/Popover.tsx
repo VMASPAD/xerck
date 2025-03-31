@@ -34,9 +34,9 @@ interface PopoverProps {
 }
 
 const Popover = ({ children, defaultOpen = false, open: controlledOpen, onOpenChange }: PopoverProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen)
-  const [align, setAlign] = React.useState<"start" | "center" | "end">("center")
-  const [sideOffset, setSideOffset] = React.useState(4)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
+  const [align, setAlign] = useState<"start" | "center" | "end">("center")
+  const [sideOffset, setSideOffset] = useState(4)
   
   const triggerRef = React.useRef<HTMLElement>(null)
   const contentRef = React.useRef<HTMLDivElement>(null)
@@ -241,9 +241,9 @@ const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
     ...props 
   }, forwardedRef) => {
     const { open, contentRef, triggerRef, arrowRef } = usePopover()
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
-    const [arrowPosition, setArrowPosition] = React.useState({ top: 0, left: 0 })
-    const [mounted, setMounted] = React.useState(false)
+    const [position, setPosition] = useState({ top: 0, left: 0 })
+    const [arrowPosition, setArrowPosition] = useState({ top: 0, left: 0 })
+    const [mounted, setMounted] = useState(false)
     
     // Calcular posición del popover según alineación y offset
     const updatePosition = React.useCallback(() => {

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import AlertDialog from "./AlertDialog";
+import AlertDialog from "../components/ui/AlertDialog";
 
 const meta = {
   title: "Components/AlertDialog",

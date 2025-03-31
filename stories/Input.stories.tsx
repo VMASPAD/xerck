@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { Input } from "../components/ui/Input";
 import { Mail, Search, User, Eye, EyeOff } from "lucide-react";
@@ -98,7 +98,7 @@ export const WithPrefixAndSuffix: Story = {
 
 export const PasswordInput: Story = {
   render: () => {
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     
     return (
       <div className="w-72">

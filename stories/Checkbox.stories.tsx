@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
-import Checkbox from "./Checkbox";
+import Checkbox from "../components/ui/Checkbox";
 import React from "react";
-import { Button } from "./Button";
+import { Button } from "../components/ui/button";
 
 const meta: Meta<typeof Checkbox> = {
     title: "Components/Checkbox",
@@ -82,7 +82,7 @@ export const WithLabel: Story = {
 export const WithControlledState: Story = {
   render: () => {
     // Este ejemplo muestra cómo usar el checkbox en modo controlado
-    const [isChecked, setIsChecked] = React.useState(false);
+    const [isChecked, setIsChecked] = useState(false);
     
     return (
       <div className="flex flex-col gap-4">

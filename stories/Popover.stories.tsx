@@ -224,7 +224,7 @@ export const WithCustomTrigger: Story = {
 
 export const ControlledExample: Story = {
   render: () => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     
     return (
       <div className="flex flex-col items-center space-y-4">

@@ -73,7 +73,7 @@ interface ContextMenuProps {
 }
 
 const ContextMenu = ({ children }: ContextMenuProps) => {
-  const [state, setState] = React.useState<ContextMenuState>({
+  const [state, setState] = useState<ContextMenuState>({
     open: false,
     x: 0,
     y: 0,
@@ -228,7 +228,7 @@ interface ContextMenuContentProps extends React.HTMLAttributes<HTMLDivElement> {
 const ContextMenuContent = React.forwardRef<HTMLDivElement, ContextMenuContentProps>(
   ({ className, children, ...props }, ref) => {
     const { open, x, y } = useContextMenu()
-    const [position, setPosition] = React.useState({ x, y })
+    const [position, setPosition] = useState({ x, y })
     const contentRef = React.useRef<HTMLDivElement>(null)
     
     // Mover el useEffect fuera de la condición para mantener consistente el número de hooks
@@ -619,7 +619,7 @@ const ContextMenuSubContent = React.forwardRef<HTMLDivElement, ContextMenuSubCon
     const { isSubmenuOpen } = useContextMenu()
     const isOpen = isSubmenuOpen(id)
     const triggerRef = React.useRef<HTMLElement | null>(null)
-    const [position, setPosition] = React.useState({ top: 0, left: 0 })
+    const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Mover el useEffect fuera de la condición para mantener consistente el número de hooks
     React.useEffect(() => {

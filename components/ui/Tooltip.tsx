@@ -88,7 +88,7 @@ const Tooltip = ({
   delayDuration: delayDurationProp,
   disableHoverableContent: disableHoverableContentProp,
 }: TooltipProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen || false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen || false)
   const triggerRef = React.useRef<HTMLElement>(null)
   const contentId = React.useId()
   
@@ -253,7 +253,7 @@ TooltipTrigger.displayName = "TooltipTrigger"
 
 // Portal para el contenido
 const TooltipPortal = ({ children }: { children: React.ReactNode }) => {
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   
   React.useEffect(() => {
     setMounted(true)
@@ -303,10 +303,10 @@ const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
     const contentRef = React.useRef<HTMLDivElement>(null)
     const arrowRef = React.useRef<HTMLDivElement>(null)
     
-    const [position, setPosition] = React.useState({ x: 0, y: 0 })
-    const [arrowPosition, setArrowPosition] = React.useState({ x: 0, y: 0 })
-    const [computedSide, setComputedSide] = React.useState(side)
-    const [computedAlign, setComputedAlign] = React.useState(align)
+    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [arrowPosition, setArrowPosition] = useState({ x: 0, y: 0 })
+    const [computedSide, setComputedSide] = useState(side)
+    const [computedAlign, setComputedAlign] = useState(align)
     
     // Calcular colisión y padding
     const padding = React.useMemo(() => {

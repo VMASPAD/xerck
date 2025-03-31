@@ -146,9 +146,9 @@ export const WithNestedSubmenus: Story = {
 
 export const WithCheckboxItems: Story = {
   render: () => {
-    const [showStatusBar, setShowStatusBar] = React.useState(true);
-    const [showLineNumbers, setShowLineNumbers] = React.useState(true);
-    const [showMinimap, setShowMinimap] = React.useState(false);
+    const [showStatusBar, setShowStatusBar] = useState(true);
+    const [showLineNumbers, setShowLineNumbers] = useState(true);
+    const [showMinimap, setShowMinimap] = useState(false);
     
     return (
       <Menubar className="w-96">
@@ -193,7 +193,7 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioItems: Story = {
   render: () => {
-    const [textSize, setTextSize] = React.useState("normal");
+    const [textSize, setTextSize] = useState("normal");
     
     return (
       <Menubar className="w-96">

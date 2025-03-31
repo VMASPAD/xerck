@@ -157,7 +157,7 @@ export const TableExample: Story = {
 
 export const LoadingStateToggle: Story = {
   render: () => {
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     
     // Simular carga de datos
     React.useEffect(() => {

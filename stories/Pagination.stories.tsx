@@ -156,7 +156,7 @@ export const LongPagination: Story = {
 
 export const InteractivePagination: Story = {
   render: () => {
-    const [currentPage, setCurrentPage] = React.useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const totalPages = 10;
     
     return (

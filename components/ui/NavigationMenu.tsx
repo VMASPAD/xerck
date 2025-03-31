@@ -64,8 +64,8 @@ interface NavigationMenuProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuProps>(
   ({ className, children, viewportClassName, ...props }, ref) => {
-    const [activeMenu, setActiveMenu] = React.useState<string | null>(null)
-    const [openMenus, setOpenMenus] = React.useState<Set<string>>(new Set())
+    const [activeMenu, setActiveMenu] = useState<string | null>(null)
+    const [openMenus, setOpenMenus] = useState<Set<string>>(new Set())
     const menuIds = React.useRef<Set<string>>(new Set())
     const viewportRef = React.useRef<HTMLDivElement>(null)
     

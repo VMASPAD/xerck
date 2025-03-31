@@ -11,8 +11,8 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from "./Dialog";
-import { Button } from "./Button";
+} from "../components/ui/Dialog";
+import { Button } from "../components/ui/button";
 
 const meta: Meta<typeof Dialog> = {
   title: "Components/Dialog",
@@ -160,7 +160,7 @@ export const NoCloseOnOutsideClick: Story = {
 
 export const Controlled: Story = {
   render: () => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     
     return (
       <div className="flex flex-col items-center gap-4">

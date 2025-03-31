@@ -2,6 +2,31 @@
   "name": "xerck",
   "version": "0.1.0",
   "private": true,
+  "description": "Proyecto Xerck basado en Next.js con componentes UI usando Tailwind CSS y Radix UI",
+  "keywords": [
+    "next.js",
+    "react",
+    "tailwindcss",
+    "radix-ui",
+    "typescript",
+    "ui-components",
+    "storybook",
+    "design-system"
+  ],
+  "author": {
+    "name": "Tomas Avila",
+    "email": "vmcodeta@gmail.com",
+    "url": "https://tu-sitio-web.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vmaspad/xerck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vmaspad/xerck/issues"
+  },
+  "homepage": "https://github.com/vmaspad/xerck#readme",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
