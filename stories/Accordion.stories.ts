@@ -1,10 +1,6 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
+  Accordion, 
   TestAccordion,
 } from "../components/ui/Accordion";
 

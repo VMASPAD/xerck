@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import {
   Sheet,
@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "../components/ui/Sheet";
+import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Sheet> = {
   title: "Components/Sheet",
@@ -162,15 +163,15 @@ export const BottomSide: Story = {
         <div className="space-y-4 py-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Modo oscuro</span>
-            <button className="h-6 w-11 rounded-full bg-muted"></button>
+            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Notificaciones</span>
-            <button className="h-6 w-11 rounded-full bg-muted"></button>
+            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Sonidos</span>
-            <button className="h-6 w-11 rounded-full bg-muted"></button>
+            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
           </div>
         </div>
       </SheetContent>

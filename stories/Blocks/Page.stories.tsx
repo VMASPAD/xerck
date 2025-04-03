@@ -1,12 +1,12 @@
 import type { StoryObj } from '@storybook/react'; 
 import React from 'react';
-import LayotLoginV1 from '@/components/ui/Blocks/Login/LayotLoginV1';
-import LayotLoginV2 from '@/components/ui/Blocks/Login/LayotLoginV2';
-import LayotLoginV3 from '@/components/ui/Blocks/Login/LayotLoginV3';
-import LayotLoginV4 from '@/components/ui/Blocks/Login/LayotLoginV4';
-import LayotLoginV5 from '@/components/ui/Blocks/Login/LayotLoginV5';
-import LayotLoginV6 from '@/components/ui/Blocks/Login/LayotLoginV6';
-import LayotLoginV7 from '@/components/ui/Blocks/Login/LayotLoginV7';
+import LayotLoginV1 from '@/components/ui/Blocks/Login/LayoutLoginV1';
+import LayotLoginV2 from '@/components/ui/Blocks/Login/LayoutLoginV2';
+import LayotLoginV3 from '@/components/ui/Blocks/Login/LayoutLoginV3';
+import LayotLoginV4 from '@/components/ui/Blocks/Login/LayoutLoginV4';
+import LayotLoginV5 from '@/components/ui/Blocks/Login/LayoutLoginV5';
+import LayotLoginV6 from '@/components/ui/Blocks/Login/LayoutLoginV6';
+import LayotLoginV7 from '@/components/ui/Blocks/Login/LayoutLoginV7';
 
 // Eliminamos importaciones no utilizadas para reducir posibles conflictos
 
