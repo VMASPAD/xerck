@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import { 
   Collapsible, 
@@ -128,18 +128,34 @@ export const ControlledExample: Story = {
 
 // Añadir un ejemplo con múltiples paneles
 export const MultipleCollapsibles: Story = {
-  render: () => (
-    <div className="w-80 space-y-2">
-      {["Sección 1", "Sección 2", "Sección 3"].map((section, index) => (
-        <Collapsible key={section} className="border rounded-md" defaultOpen={index === 0}>
-          <CollapsibleTrigger className={index === 0 ? "bg-primary text-primary-foreground" : "bg-muted"}>
-            {section}
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <p>Contenido para {section.toLowerCase()}</p>
-          </CollapsibleContent>
-        </Collapsible>
-      ))}
-    </div>
-  ),
+  render: () => {
+    const [openSection, setOpenSection] = useState(0);
+    
+    return (
+      <div className="w-80 space-y-2">
+        {["Sección 1", "Sección 2", "Sección 3"].map((section, index) => (
+          <Collapsible 
+            key={section} 
+            className="border rounded-md" 
+            open={openSection === index}
+            onOpenChange={(isOpen) => {
+              if (isOpen) setOpenSection(index);
+            }}
+          >
+            <CollapsibleTrigger 
+              className={openSection === index 
+                ? "bg-primary text-primary-foreground" 
+                : "bg-muted"
+              }
+            >
+              {section}
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <p>Contenido para {section.toLowerCase()}</p>
+            </CollapsibleContent>
+          </Collapsible>
+        ))}
+      </div>
+    );
+  },
 };

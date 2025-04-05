@@ -3,6 +3,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { Check, ChevronRight, Circle } from "lucide-react"
+import { useState } from "react"
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -315,13 +316,6 @@ const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
       setOpen(!open)
     }
     
-    // Abrir el menú al pasar el ratón si otro menú ya está abierto
-    const handleMouseEnter = () => {
-      if (activeMenu !== null && activeMenu !== id) {
-        setOpen(true)
-      }
-    }
-    
     return (
       <button
         ref={ref}
@@ -335,7 +329,6 @@ const MenubarTrigger = React.forwardRef<HTMLButtonElement, MenubarTriggerProps>(
         aria-expanded={open}
         data-state={open ? "open" : "closed"}
         onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
         {...props}
       >
         {children}
@@ -410,49 +403,50 @@ const MenubarSubTrigger = React.forwardRef<HTMLDivElement, MenubarSubTriggerProp
 MenubarSubTrigger.displayName = "MenubarSubTrigger"
 
 // Contenido del submenú
+// Contenido del submenú
 interface MenubarSubContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const MenubarSubContent = React.forwardRef<HTMLDivElement, MenubarSubContentProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, children, ...props }, ref) => {
     const { id, open, triggerRef } = useSubMenu()
     const contentRef = React.useRef<HTMLDivElement>(null)
     const [position, setPosition] = useState({ top: 0, left: 0 })
     
     // Calcular posición del submenú
     React.useEffect(() => {
-      if (!open || !triggerRef.current || !contentRef.current) return
+      if (!open || !triggerRef.current) return
       
       const updatePosition = () => {
         const triggerRect = triggerRef.current?.getBoundingClientRect()
-        const contentRect = contentRef.current?.getBoundingClientRect()
         
-        if (!triggerRect || !contentRect) return
+        if (!triggerRect) return
         
         // Colocar a la derecha del trigger
-        let left = triggerRect.right + 5
-        let top = triggerRect.top
+        let left = triggerRect.right + 5 + window.scrollX
+        let top = triggerRect.top + window.scrollY
         
-        // Ajustar si no cabe en pantalla
-        const viewportWidth = window.innerWidth
-        const viewportHeight = window.innerHeight
-        
-        if (left + contentRect.width > viewportWidth) {
-          // Si no cabe a la derecha, mostrar a la izquierda
-          left = triggerRect.left - contentRect.width - 5
+        // Ajustar si sale de pantalla
+        if (contentRef.current) {
+          const contentRect = contentRef.current.getBoundingClientRect()
+          const viewportWidth = window.innerWidth
+          const viewportHeight = window.innerHeight
+          
+          if (left + contentRect.width > viewportWidth - 10) {
+            // Si no cabe a la derecha, mostrar a la izquierda
+            left = triggerRect.left - contentRect.width - 5 + window.scrollX
+          }
+          
+          if (top + contentRect.height > viewportHeight - 10) {
+            // Ajustar verticalmente para que no salga de pantalla
+            top = Math.max(10, viewportHeight - contentRect.height - 10) + window.scrollY
+          }
         }
         
-        if (top + contentRect.height > viewportHeight) {
-          // Ajustar verticalmente
-          top = viewportHeight - contentRect.height - 5
-        }
-        
-        setPosition({
-          top: top + window.scrollY,
-          left: left + window.scrollX
-        })
+        setPosition({ top, left })
       }
       
-      updatePosition()
+      // Pequeño retraso para asegurar que el DOM está actualizado
+      setTimeout(updatePosition, 0)
       
       window.addEventListener('resize', updatePosition)
       window.addEventListener('scroll', updatePosition)
@@ -483,7 +477,9 @@ const MenubarSubContent = React.forwardRef<HTMLDivElement, MenubarSubContentProp
           data-state={open ? "open" : "closed"}
           data-submenu-content={id}
           {...props}
-        />
+        >
+          {children}
+        </div>
       </MenubarPortal>
     )
   }
@@ -511,53 +507,50 @@ const MenubarContent = React.forwardRef<HTMLDivElement, MenubarContentProps>(
     
     // Calcular la posición del menú
     React.useEffect(() => {
-      if (!open || !triggerRef.current || !contentRef.current) return
+      if (!open) return
       
       const updatePosition = () => {
-        const triggerRect = triggerRef.current?.getBoundingClientRect()
-        const contentRect = contentRef.current?.getBoundingClientRect()
+        if (!triggerRef.current) return
         
-        if (!triggerRect || !contentRect) return
+        const triggerRect = triggerRef.current.getBoundingClientRect()
         
-        // Colocar debajo del trigger
-        let top = triggerRect.bottom + sideOffset
+        // Posicionar debajo del trigger
+        const top = triggerRect.bottom + sideOffset + window.scrollY
         let left = 0
         
         // Alineación horizontal
         switch (align) {
           case "start":
-            left = triggerRect.left + alignOffset
+            left = triggerRect.left + alignOffset + window.scrollX
             break
           case "center":
-            left = triggerRect.left + (triggerRect.width / 2) - (contentRect.width / 2) + alignOffset
+            left = triggerRect.left + (triggerRect.width / 2) - (contentRef.current?.offsetWidth || 0) / 2 + alignOffset + window.scrollX
             break
           case "end":
-            left = triggerRect.right - contentRect.width + alignOffset
+            left = triggerRect.right - (contentRef.current?.offsetWidth || 0) + alignOffset + window.scrollX
             break
         }
         
         // Ajustar si sale de la pantalla
-        const viewportWidth = window.innerWidth
-        const viewportHeight = window.innerHeight
-        
-        if (left < 10) {
-          left = 10
-        } else if (left + contentRect.width > viewportWidth - 10) {
-          left = viewportWidth - contentRect.width - 10
-        }
-        
-        if (top + contentRect.height > viewportHeight) {
-          // Si no cabe abajo, mostrar arriba
-          top = triggerRect.top - contentRect.height - sideOffset
+        if (contentRef.current) {
+          const contentWidth = contentRef.current.offsetWidth
+          const viewportWidth = window.innerWidth
+          
+          if (left < 10) {
+            left = 10
+          } else if (left + contentWidth > viewportWidth - 10) {
+            left = viewportWidth - contentWidth - 10
+          }
         }
         
         setPosition({
-          top: top + window.scrollY,
-          left: left + window.scrollX
+          top,
+          left
         })
       }
       
-      updatePosition()
+      // Pequeño retraso para asegurar que el DOM está actualizado
+      setTimeout(updatePosition, 0)
       
       window.addEventListener('resize', updatePosition)
       window.addEventListener('scroll', updatePosition)

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import {
   Select,
@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/Select";
+import { Button } from "@/components/ui/button";
 
 const meta: Meta<typeof Select> = {
   title: "Components/Select",
@@ -218,13 +219,13 @@ export const WithForm: Story = {
           </Select>
         </div>
         
-        <button
+        <Button
           type="submit"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90"
           disabled={!formData.country || !formData.city}
         >
           Enviar
-        </button>
+        </Button>
       </form>
     );
   },
@@ -263,6 +264,96 @@ export const Customized: Story = {
           </SelectGroup>
         </SelectContent>
       </Select>
+    );
+  },
+};
+
+export const WithSteps: Story = {
+  render: () => {
+    const [step, setStep] = useState(1);
+    const [fruit, setFruit] = useState("");
+    const [color, setColor] = useState("");
+    const [result, setResult] = useState("");
+    
+    const handleNext = () => {
+      if (step === 1 && fruit) {
+        setStep(2);
+      } else if (step === 2 && color) {
+        setResult(`Elegiste: ${fruit} de color ${color}`);
+        setStep(3);
+      }
+    };
+    
+    const handleReset = () => {
+      setStep(1);
+      setFruit("");
+      setColor("");
+      setResult("");
+    };
+    
+    return (
+      <div className="flex flex-col space-y-4 w-[300px]">
+        {step === 1 && (
+          <>
+            <h3 className="text-sm font-medium">Paso 1: Elige una fruta</h3>
+            <Select value={fruit} onValueChange={setFruit}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccionar fruta" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="manzana">Manzana</SelectItem>
+                <SelectItem value="banana">Banana</SelectItem>
+                <SelectItem value="naranja">Naranja</SelectItem>
+                <SelectItem value="uva">Uva</SelectItem>
+              </SelectContent>
+            </Select>
+          </>
+        )}
+        
+        {step === 2 && (
+          <>
+            <h3 className="text-sm font-medium">Paso 2: Elige un color</h3>
+            <p className="text-xs text-muted-foreground">Fruta seleccionada: {fruit}</p>
+            <Select value={color} onValueChange={setColor}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccionar color" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="rojo">Rojo</SelectItem>
+                <SelectItem value="verde">Verde</SelectItem>
+                <SelectItem value="amarillo">Amarillo</SelectItem>
+                <SelectItem value="morado">Morado</SelectItem>
+              </SelectContent>
+            </Select>
+          </>
+        )}
+        
+        {step === 3 && (
+          <div className="p-4 border rounded-md">
+            <h3 className="font-medium">¡Selección completada!</h3>
+            <p>{result}</p>
+          </div>
+        )}
+        
+        <div className="flex justify-between">
+          {step < 3 ? (
+            <Button
+              onClick={handleNext}
+              disabled={(step === 1 && !fruit) || (step === 2 && !color)}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50"
+            >
+              Siguiente
+            </Button>
+          ) : (
+            <Button
+              onClick={handleReset}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+            >
+              Reiniciar
+            </Button>
+          )}
+        </div>
+      </div>
     );
   },
 };

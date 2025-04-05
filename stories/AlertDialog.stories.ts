@@ -64,7 +64,7 @@ export const Default: Story = {
     triggerLabel: "Abrir diálogo",
     actionVariant: "default",
     cancelVariant: "outline",
-    triggerVariant: "default",
+    triggerVariant: "normal",
     defaultOpen: false,
   },
 };
@@ -89,6 +89,7 @@ export const InfoConfirmation: Story = {
     cancelLabel: "Revisar más tarde",
     actionVariant: "secondary",
     cancelVariant: "ghost",
+    triggerVariant: "info",
     defaultOpen: false
   },
 }
@@ -103,7 +104,7 @@ export const WarningAction: Story = {
     cancelVariant: "ghost",
     defaultOpen: false,
     triggerLabel: "Acción peligrosa",
-    triggerVariant: "outline",
+    triggerVariant: "danger",
   },
 }
 
@@ -115,6 +116,7 @@ export const IconTrigger: Story = {
     cancelLabel: "Cancelar",
     actionVariant: "default",
     cancelVariant: "outline",
+    triggerVariant: "secondary",
     defaultOpen: false, 
   },
 };
@@ -127,6 +129,7 @@ export const SuccessAction: Story = {
     cancelLabel: "Descartar",
     actionVariant: "default",
     cancelVariant: "ghost",
+    triggerVariant: "success",
     defaultOpen: false, 
   },
 };

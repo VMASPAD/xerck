@@ -186,11 +186,11 @@ export const VerticalOnly: Story = {
   },
   render: (args) => (
     <ScrollArea {...args}>
-      <div className="p-4" style={{ width: '500px' }}>
-        <h4 className="mb-4 text-sm font-medium leading-none">Solo barra vertical</h4>
+      <div className="p-4" style={{ width: '800px' }}>
+        <h4 className="mb-4 text-sm font-medium leading-none">Solo barra vertical (contenido horizontal cortado)</h4>
         {Array.from({ length: 30 }).map((_, i) => (
-          <div key={i} className="mt-2 text-sm">
-            El contenido horizontal se cortará - {Array(50).fill('●').join(' ')}
+          <div key={i} className="mt-2 text-sm whitespace-nowrap">
+            Este contenido horizontal se cortará - {Array(100).fill('●').join(' ')}
           </div>
         ))}
       </div>

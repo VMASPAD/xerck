@@ -5,6 +5,7 @@ import { createPortal } from "react-dom"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "../../lib/utils"
+import { useState } from "react"
 
 // Contexto del Select
 type SelectContextType = {
@@ -34,6 +35,8 @@ type SelectContextType = {
   unregisterOption: (value: string) => void
   activeDescendant: string | null
   setActiveDescendant: React.Dispatch<React.SetStateAction<string | null>>
+  registerItemLabel: (value: string, label: React.ReactNode) => void
+  itemLabels: Map<string, React.ReactNode>
 }
 
 const SelectContext = React.createContext<SelectContextType | undefined>(undefined)
@@ -94,6 +97,7 @@ const Select = ({
   const [valueNode, setValueNode] = useState<React.ReactNode>(placeholder)
   const [options, setOptions] = useState<Map<string, HTMLDivElement>>(new Map())
   const [activeDescendant, setActiveDescendant] = useState<string | null>(null)
+  const [itemLabels, setItemLabels] = useState<Map<string, React.ReactNode>>(new Map())
   
   const isControlled = controlledValue !== undefined
   const value = isControlled ? controlledValue : uncontrolledValue
@@ -110,6 +114,15 @@ const Select = ({
     onValueChange?.(newValue)
     setOpen(false)
   }, [isControlled, onValueChange])
+  
+  // Registrar etiquetas de opciones para mostrar el valor seleccionado
+  const registerItemLabel = React.useCallback((optionValue: string, label: React.ReactNode) => {
+    setItemLabels(prev => {
+      const newMap = new Map(prev)
+      newMap.set(optionValue, label)
+      return newMap
+    })
+  }, [])
   
   // Registrar y desregistrar opciones para navegación por teclado
   const registerOption = React.useCallback((optionValue: string, node: HTMLDivElement) => {
@@ -158,6 +171,15 @@ const Select = ({
       document.removeEventListener("keydown", handleEscape)
     }
   }, [open])
+  
+  // Actualizar el valor mostrado cuando cambie el valor seleccionado
+  React.useEffect(() => {
+    if (value && itemLabels.has(value)) {
+      setValueNode(itemLabels.get(value))
+    } else if (!value && placeholder) {
+      setValueNode(placeholder)
+    }
+  }, [value, itemLabels, placeholder])
   
   // Navegación por teclado en el select
   React.useEffect(() => {
@@ -290,6 +312,8 @@ const Select = ({
     unregisterOption,
     activeDescendant,
     setActiveDescendant,
+    registerItemLabel,
+    itemLabels,
   }), [
     open, 
     value, 
@@ -308,6 +332,8 @@ const Select = ({
     registerOption,
     unregisterOption,
     activeDescendant,
+    registerItemLabel,
+    itemLabels,
   ])
   
   return (
@@ -342,22 +368,28 @@ interface SelectValueProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const SelectValue = React.forwardRef<HTMLSpanElement, SelectValueProps>(
-  ({ children, placeholder, ...props }, ref) => {
-    const { value, setValueNode } = useSelectContext()
+  ({ className, children, placeholder, ...props }, ref) => {
+    const { value, itemLabels } = useSelectContext()
     
-    // Actualizar el nodo de valor cuando cambie
-    React.useEffect(() => {
-      setValueNode(value ? children : placeholder)
-    }, [children, placeholder, value, setValueNode])
+    // Si hay un valor seleccionado y tenemos su etiqueta
+    if (value && itemLabels.has(value)) {
+      return (
+        <span ref={ref} {...props}>
+          {itemLabels.get(value)}
+        </span>
+      )
+    }
     
+    // Si no hay valor pero hay placeholder
     if (!value && placeholder) {
       return (
-        <span ref={ref} {...props} className={cn("text-muted-foreground", props.className)}>
+        <span ref={ref} {...props} className={cn("text-muted-foreground", className)}>
           {placeholder}
         </span>
       )
     }
     
+    // Caso fallback
     return (
       <span ref={ref} {...props}>
         {children}
@@ -720,6 +752,11 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         selectContext.unregisterOption(value)
       }
     }, [value, selectContext.registerOption, selectContext.unregisterOption])
+    
+    // Registrar el contenido de la etiqueta para mostrar cuando se seleccione
+    React.useEffect(() => {
+      selectContext.registerItemLabel(value, children)
+    }, [value, children, selectContext.registerItemLabel])
     
     // Manejar selección
     const handleClick = () => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import {
   DropdownMenu,
@@ -132,13 +132,41 @@ export const WithCheckboxItems: Story = {
 export const WithRadioItems: Story = {
   render: (args) => {
     const [position, setPosition] = useState("bottom");
+    
+    // Configuración de posicionamiento basada en la selección
+    const getPositioningProps = () => {
+      switch (position) {
+        case "top":
+          return { 
+            align: "center" as const, 
+            // Posicionamos el menú arriba del botón
+            sideOffset: -4 // Valor negativo para que aparezca arriba
+          };
+        case "right":
+          return { 
+            align: "end" as const, 
+            alignOffset: 4
+          };
+        case "left":
+          return { 
+            align: "start" as const,
+            alignOffset: -4
+          };
+        case "bottom":
+        default:
+          return { 
+            align: "center" as const, 
+            sideOffset: 4 // Valor positivo para que aparezca abajo
+          };
+      }
+    };
 
     return (
       <DropdownMenu {...args}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Posición del Panel</Button>
+          <Button variant="outline">Posición del Panel: {position}</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-56" {...getPositioningProps()}>
           <DropdownMenuLabel>Posición del Panel</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>

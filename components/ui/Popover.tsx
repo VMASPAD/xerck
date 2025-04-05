@@ -3,6 +3,8 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { cn } from "../../lib/utils"
+import { useState } from "react"
+import { Button } from "./button"
 
 // Contexto para el Popover
 type PopoverContextType = {
@@ -156,7 +158,7 @@ const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
     }
     
     return (
-      <button
+      <Button
         ref={ref}
         type="button"
         onClick={handleClick}
@@ -164,7 +166,7 @@ const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
         {...props}
       >
         {children}
-      </button>
+      </Button>
     )
   }
 )

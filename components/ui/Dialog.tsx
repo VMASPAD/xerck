@@ -3,6 +3,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
+import { useState } from "react"
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -12,11 +13,13 @@ const DialogContext = React.createContext<{
   open: boolean
   setOpen: (open: boolean) => void
   onOpenChange?: (open: boolean) => void
-  closeDialog: () => void // Nuevo método para cerrar el diálogo desde componentes hijos
+  closeDialog: () => void 
+  closeOnOutsideClick: boolean // Añadir esta propiedad al contexto
 }>({
   open: false,
   setOpen: () => {},
-  closeDialog: () => {} // Valor por defecto para el nuevo método
+  closeDialog: () => {},
+  closeOnOutsideClick: true // Valor por defecto
 })
 
 // Hook para consumir el contexto
@@ -72,7 +75,7 @@ const Dialog = ({
   }, [open, setOpen])
   
   return (
-    <DialogContext.Provider value={{ open, setOpen, onOpenChange, closeDialog }}>
+    <DialogContext.Provider value={{ open, setOpen, onOpenChange, closeDialog, closeOnOutsideClick }}>
       {children}
     </DialogContext.Provider>
   )
@@ -194,8 +197,7 @@ interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
   ({ className, children, ...props }, ref) => {
-    const { open, closeDialog } = useDialogContext()
-    const { closeOnOutsideClick } = React.useContext(DialogContext) as { closeOnOutsideClick?: boolean }
+    const { open, closeDialog, closeOnOutsideClick } = useDialogContext()
     
     // Detener la propagación de clics para no cerrar al hacer clic dentro del diálogo
     const handleContentClick = (e: React.MouseEvent) => {
@@ -216,7 +218,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
     React.useEffect(() => {
       if (!open) {
         setIsAnimating(true)
-        const timer = setTimeout(() => setIsAnimating(false), 300) // Duración de la animación
+        const timer = setTimeout(() => setIsAnimating(false), 400) // Aumentar duración de la animación
         return () => clearTimeout(timer)
       }
     }, [open])
@@ -233,18 +235,22 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
             aria-modal="true"
             className={cn(
               "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg",
-              "transition-all duration-300 ease-in-out transform",
+              "transition-all duration-400 ease-in-out transform",
               open ? "scale-100 opacity-100" : "scale-95 opacity-0",
               "data-[state=open]:animate-in data-[state=closed]:animate-out",
               "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
               "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-              "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-              "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+              // Modificar estas líneas para animación desde arriba
+              "data-[state=closed]:slide-out-to-top-[10%]",
+              "data-[state=open]:slide-in-from-top-[10%]",
               "sm:rounded-lg",
               className
             )}
             data-state={open ? "open" : "closed"}
             onClick={handleContentClick}
+            style={{
+              transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)", // Curva más suave
+            }}
             {...props}
           >
             {children}

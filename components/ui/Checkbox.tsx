@@ -15,7 +15,7 @@ interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, ...props }, ref) => {
-    const [checked, setChecked] = useState(props.defaultChecked || false);
+    const [checked, setChecked] = React.useState(props.defaultChecked || false);
     const internalRef = React.useRef<HTMLInputElement>(null);
 
     // Manejar el cambio interno y llamar al controlador de eventos externo si existe
@@ -24,21 +24,6 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         setChecked(e.target.checked);
       }
       props.onChange?.(e);
-    };
-
-    // Manejar el clic en el contenedor personalizado
-    const handleClick = (e: React.MouseEvent) => {
-      if (!props.disabled) {
-        // Detener la propagación para evitar interferencias
-        e.stopPropagation();
-        
-        // Simular clic en el input real
-        const input = internalRef.current;
-        if (input) {
-          input.click();
-          input.focus();
-        }
-      }
     };
 
     // Usar el estado controlado si se proporciona la prop checked
@@ -50,15 +35,15 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
 
     const isChecked = props.checked !== undefined ? props.checked : checked;
 
+    // Simplificar - permitir que el label haga todo el trabajo
     return (
       <label 
-        className="relative inline-flex items-center cursor-pointer select-none" 
-        onClick={(e) => e.stopPropagation()}
+        className="relative inline-flex items-center cursor-pointer select-none"
       >
         <input
           {...props}
           type="checkbox"
-          ref={(node) => {
+          ref={node => {
             // Manejar el ref interno
             internalRef.current = node;
             
@@ -74,15 +59,13 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           onChange={handleChange}
         />
         <div
-          role="presentation"
-          onClick={handleClick}
           className={cn(
-            "h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all duration-200 ease-in-out",
+            "h-4 w-4 shrink-0 rounded-sm border border-primary shadow transition-all duration-200 ease-in-out",
             isChecked ? "bg-primary text-primary-foreground" : "bg-transparent",
             props.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
             className
           )}
-          aria-hidden="true"
+          // Eliminar el onClick personalizado para permitir que trabaje el comportamiento nativo
         >
           <span className={cn(
             "flex items-center justify-center text-current transition-transform duration-200",

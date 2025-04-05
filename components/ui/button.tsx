@@ -38,7 +38,7 @@ const sizeStyles = {
 };
 
 /** Primary UI component for user interaction */
-export const Button = ({
+const Button = ({
   variant = 'normal',
   style,
   label,
@@ -67,3 +67,4 @@ export const Button = ({
     </button>
   );
 };
+export {Button}

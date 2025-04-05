@@ -3,6 +3,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { Check, ChevronRight, Circle } from "lucide-react"
+import { useState } from "react"
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -294,56 +295,87 @@ const DropdownMenuContent = React.forwardRef<HTMLDivElement, DropdownMenuContent
     
     // Calcular la posición del menú
     React.useEffect(() => {
-      if (!open || !triggerRef.current || !contentRef.current) return
+      if (!open) return;
       
-      const updatePosition = () => {
-        const triggerRect = triggerRef.current?.getBoundingClientRect()
-        const contentRect = contentRef.current?.getBoundingClientRect()
+      // Esperamos hasta que el contenido esté renderizado
+      const timeoutId = setTimeout(() => {
+        const updatePosition = () => {
+          const trigger = triggerRef.current;
+          const content = contentRef.current;
+          
+          if (!trigger || !content) return;
+          
+          const triggerRect = trigger.getBoundingClientRect();
+          
+          // Determinar si debemos mostrar arriba o abajo
+          const showAbove = sideOffset < 0;
+          
+          // Posición inicial
+          let top = showAbove 
+            ? triggerRect.top - content.offsetHeight + window.scrollY + Math.abs(sideOffset)
+            : triggerRect.bottom + window.scrollY + sideOffset;
+            
+          let left;
+          
+          // Alineación horizontal
+          switch (align) {
+            case "start":
+              left = triggerRect.left + window.scrollX + alignOffset;
+              break;
+            case "end":
+              left = triggerRect.right - content.offsetWidth + window.scrollX + alignOffset;
+              break;
+            case "center":
+            default:
+              left = triggerRect.left + (triggerRect.width / 2) - (content.offsetWidth / 2) + window.scrollX + alignOffset;
+              break;
+          }
+          
+          // Ajustes de límites de pantalla
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          
+          // Evitar que salga por los bordes horizontales
+          if (left < 10) {
+            left = 10;
+          } else if (left + content.offsetWidth > viewportWidth - 10) {
+            left = viewportWidth - content.offsetWidth - 10;
+          }
+          
+          // Ajuste vertical - si no hay espacio suficiente, invertir la posición
+          if (!showAbove && top + content.offsetHeight > viewportHeight + window.scrollY - 10) {
+            // Si no hay espacio abajo, intentar arriba
+            top = triggerRect.top - content.offsetHeight - Math.abs(sideOffset) + window.scrollY;
+          } else if (showAbove && top < window.scrollY) {
+            // Si no hay espacio arriba, intentar abajo
+            top = triggerRect.bottom + Math.abs(sideOffset) + window.scrollY;
+          }
+          
+          // Si aún no cabe, colocar donde haya más espacio
+          if (top < window.scrollY + 10) {
+            top = window.scrollY + 10;
+          } else if (top + content.offsetHeight > viewportHeight + window.scrollY - 10) {
+            top = viewportHeight + window.scrollY - content.offsetHeight - 10;
+          }
+          
+          setPosition({ top, left });
+        };
         
-        if (!triggerRect || !contentRect) return
+        updatePosition();
         
-        let top = triggerRect.bottom + sideOffset + window.scrollY
-        let left = 0
+        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', updatePosition);
         
-        // Alineación horizontal
-        switch (align) {
-          case "start":
-            left = triggerRect.left + alignOffset + window.scrollX
-            break
-          case "center":
-            left = triggerRect.left + (triggerRect.width / 2) - (contentRect.width / 2) + alignOffset + window.scrollX
-            break
-          case "end":
-            left = triggerRect.right - contentRect.width + alignOffset + window.scrollX
-            break
-        }
-        
-        // Ajustar si sale de la pantalla
-        const viewportWidth = window.innerWidth
-        const viewportHeight = window.innerHeight
-        
-        if (left < 0) {
-          left = 0
-        } else if (left + contentRect.width > viewportWidth) {
-          left = viewportWidth - contentRect.width
-        }
-        
-        // Si no hay espacio abajo, mostrar arriba
-        if (top + contentRect.height > viewportHeight + window.scrollY) {
-          top = triggerRect.top - contentRect.height - sideOffset + window.scrollY
-        }
-        
-        setPosition({ top, left })
-      }
+        return () => {
+          window.removeEventListener('resize', updatePosition);
+          window.removeEventListener('scroll', updatePosition);
+        };
+      }, 0);
       
-      updatePosition()
-      
-      // Actualizar posición al resize
-      window.addEventListener('resize', updatePosition)
-      return () => window.removeEventListener('resize', updatePosition)
-    }, [open, triggerRef, sideOffset, align, alignOffset])
+      return () => clearTimeout(timeoutId);
+    }, [open, triggerRef, sideOffset, align, alignOffset]);
     
-    if (!open) return null
+    if (!open) return null;
     
     return (
       <DropdownMenuPortal>
@@ -351,12 +383,12 @@ const DropdownMenuContent = React.forwardRef<HTMLDivElement, DropdownMenuContent
           ref={mergeRefs(ref, contentRef)}
           data-dropdown-content
           className={cn(
-            "z-50 max-h-[--dropdown-content-available-height] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+            "z-50 max-h-[var(--dropdown-content-available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
             "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
             className
           )}
           style={{
-            position: 'absolute',
+            position: 'fixed',
             top: `${position.top}px`,
             left: `${position.left}px`,
             "--dropdown-content-available-height": "var(--radix-dropdown-menu-content-available-height, 300px)",
@@ -421,7 +453,7 @@ const DropdownMenuItem = React.forwardRef<HTMLDivElement, DropdownMenuItemProps>
         className={cn(
           "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
           inset && "pl-8",
-          activeItem === itemIndex && "bg-accent text-accent-foreground",
+          activeItem === itemIndex && "hover:bg-accent text-accent-foreground",
           className
         )}
         role="menuitem"
@@ -709,36 +741,76 @@ const DropdownMenuSubContent = React.forwardRef<HTMLDivElement, DropdownMenuSubC
     
     // Calcular la posición del submenú
     React.useEffect(() => {
-      if (!isOpen || !contentRef.current) return
+      if (!isOpen) return;
       
-      const triggerElement = document.querySelector(`[data-submenu-id="${id}"]`)
-      if (!triggerElement) return
+      // Esperamos hasta que el contenido esté renderizado
+      const timeoutId = setTimeout(() => {
+        const updatePosition = () => {
+          const triggerElement = document.querySelector(`[data-submenu-id="${id}"]`);
+          const content = contentRef.current;
+          
+          if (!triggerElement || !content) return;
+          
+          const triggerRect = triggerElement.getBoundingClientRect();
+          
+          // Colocar a la derecha del trigger por defecto
+          let left = triggerRect.right + 5;
+          let top = triggerRect.top;
+          
+          // Verificar límites de pantalla
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight;
+          
+          // Si no cabe a la derecha, mostrar a la izquierda
+          if (left + content.offsetWidth > viewportWidth - 10) {
+            left = Math.max(10, triggerRect.left - content.offsetWidth - 5);
+            
+            // Si tampoco cabe a la izquierda, mostrar donde haya más espacio
+            if (left < 10) {
+              const spaceRight = viewportWidth - triggerRect.right;
+              const spaceLeft = triggerRect.left;
+              
+              if (spaceRight > spaceLeft) {
+                left = triggerRect.right + 5;
+                if (left + content.offsetWidth > viewportWidth - 10) {
+                  left = viewportWidth - content.offsetWidth - 10;
+                }
+              } else {
+                left = 10;
+              }
+            }
+          }
+          
+          // Ajuste vertical - asegurar que no se salga de la pantalla
+          if (top + content.offsetHeight > viewportHeight - 10) {
+            top = viewportHeight - content.offsetHeight - 10;
+            if (top < 10) {
+              top = 10;
+            }
+          }
+          
+          // Establecer posición con valores absolutos
+          setPosition({
+            top: top + window.scrollY,
+            left: left + window.scrollX
+          });
+        };
+        
+        updatePosition();
+        
+        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', updatePosition);
+        
+        return () => {
+          window.removeEventListener('resize', updatePosition);
+          window.removeEventListener('scroll', updatePosition);
+        };
+      }, 0);
       
-      const triggerRect = triggerElement.getBoundingClientRect()
-      const contentRect = contentRef.current.getBoundingClientRect()
-      
-      // Colocar a la derecha del trigger
-      let left = triggerRect.right + 5 + window.scrollX
-      let top = triggerRect.top + window.scrollY
-      
-      // Ajustar si sale de la pantalla
-      const viewportWidth = window.innerWidth
-      const viewportHeight = window.innerHeight
-      
-      if (left + contentRect.width > viewportWidth) {
-        // Mostrar a la izquierda si no hay espacio a la derecha
-        left = triggerRect.left - contentRect.width - 5 + window.scrollX
-      }
-      
-      if (top + contentRect.height > viewportHeight + window.scrollY) {
-        // Ajustar verticalmente si es necesario
-        top = (viewportHeight + window.scrollY) - contentRect.height - 5
-      }
-      
-      setPosition({ top, left })
-    }, [isOpen, id])
+      return () => clearTimeout(timeoutId);
+    }, [isOpen, id]);
     
-    if (!isOpen) return null
+    if (!isOpen) return null;
     
     return (
       <DropdownMenuPortal>
@@ -750,7 +822,7 @@ const DropdownMenuSubContent = React.forwardRef<HTMLDivElement, DropdownMenuSubC
             className
           )}
           style={{
-            position: 'absolute',
+            position: 'fixed', // Cambiamos a 'fixed' para evitar problemas con el scroll
             top: `${position.top}px`,
             left: `${position.left}px`,
           }}

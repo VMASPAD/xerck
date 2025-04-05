@@ -63,9 +63,9 @@ export const Default: Story = {
           <SheetClose className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md mr-2">
             Cancelar
           </SheetClose>
-          <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+          <Button className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
             Guardar cambios
-          </button>
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -114,15 +114,15 @@ export const TopSide: Story = {
       <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
         Sheet Superior
       </SheetTrigger>
-      <SheetContent side="top" className="h-1/3">
+      <SheetContent side="top" className="py-8 px-8">
         <SheetHeader>
           <SheetTitle>Notificaciones</SheetTitle>
           <SheetDescription>
             Revisa tus últimas notificaciones.
           </SheetDescription>
         </SheetHeader>
-        <div className="space-y-2 py-4">
-          {[1, 2, 3].map((i) => (
+        <div className="space-y-2 py-4 max-h-[50vh] overflow-y-auto">
+          {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
               className="rounded-md border border-input p-3 text-sm"
@@ -138,9 +138,9 @@ export const TopSide: Story = {
           <SheetClose className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md mr-2">
             Cerrar
           </SheetClose>
-          <button className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+          <Button className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
             Ver todas
-          </button>
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
@@ -153,27 +153,29 @@ export const BottomSide: Story = {
       <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
         Sheet Inferior
       </SheetTrigger>
-      <SheetContent side="bottom" className="h-1/3">
+      <SheetContent side="bottom" className="max-h-96 py-8">
         <SheetHeader>
           <SheetTitle>Configuración rápida</SheetTitle>
           <SheetDescription>
             Ajusta rápidamente las configuraciones comunes.
           </SheetDescription>
         </SheetHeader>
-        <div className="space-y-4 py-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Modo oscuro</span>
-            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Notificaciones</span>
-            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Sonidos</span>
-            <Button className="h-6 w-11 rounded-full bg-muted"></Button>
-          </div>
+        <div className="space-y-4 py-4 overflow-y-auto">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="flex items-center justify-between">
+              <span className="text-sm font-medium">Configuración {i}</span>
+              <Button className="h-6 w-11 rounded-full bg-muted"></Button>
+            </div>
+          ))}
         </div>
+        <SheetFooter>
+          <SheetClose className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md mr-2">
+            Cancelar
+          </SheetClose>
+          <SheetClose className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+            Guardar
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   ),
@@ -186,18 +188,18 @@ export const Controlled: Story = {
     return (
       <>
         <div className="flex gap-2 mb-4">
-          <button
+          <Button
             onClick={() => setOpen(true)}
             className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
           >
             Abrir Sheet Controlado
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setOpen(false)}
             className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md"
           >
             Cerrar Sheet
-          </button>
+          </Button>
         </div>
         
         <div className="text-center text-sm">
@@ -219,12 +221,12 @@ export const Controlled: Story = {
               </p>
             </div>
             <SheetFooter>
-              <button
+              <Button
                 onClick={() => setOpen(false)}
                 className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
               >
                 Entendido
-              </button>
+              </Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
@@ -240,7 +242,7 @@ export const MultiStep: Story = {
     
     return (
       <>
-        <button
+        <Button
           onClick={() => {
             setStep(1);
             setOpen(true);
@@ -248,7 +250,7 @@ export const MultiStep: Story = {
           className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
         >
           Iniciar proceso
-        </button>
+        </Button>
         
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent>
@@ -304,28 +306,28 @@ export const MultiStep: Story = {
             
             <SheetFooter>
               {step > 1 && (
-                <button
+                <Button
                   onClick={() => setStep((prev) => prev - 1)}
                   className="bg-secondary text-secondary-foreground px-4 py-2 rounded-md mr-2"
                 >
                   Anterior
-                </button>
+                </Button>
               )}
               
               {step < 3 ? (
-                <button
+                <Button
                   onClick={() => setStep((prev) => prev + 1)}
                   className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
                 >
                   Siguiente
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={() => setOpen(false)}
                   className="bg-primary text-primary-foreground px-4 py-2 rounded-md"
                 >
                   Finalizar
-                </button>
+                </Button>
               )}
             </SheetFooter>
           </SheetContent>
@@ -333,4 +335,33 @@ export const MultiStep: Story = {
       </>
     );
   },
+};
+
+export const DefaultOpen: Story = {
+  render: () => (
+    <Sheet defaultOpen={false}>
+      <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+        Alternar Sheet (Abierto por defecto)
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Sheet abierto por defecto</SheetTitle>
+          <SheetDescription>
+            Este Sheet se muestra abierto inicialmente gracias a defaultOpen=true
+          </SheetDescription>
+        </SheetHeader>
+        <div className="py-6">
+          <p className="text-sm">
+            Este es un ejemplo de un Sheet que está configurado para mostrarse abierto por defecto.
+            Puedes cerrarlo con el botón X o haciendo clic en el overlay.
+          </p>
+        </div>
+        <SheetFooter>
+          <SheetClose className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+            Cerrar
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
 };

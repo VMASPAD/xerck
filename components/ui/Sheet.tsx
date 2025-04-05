@@ -1,9 +1,10 @@
 "use client"
 
-import * as React from "react"
+import React, { useState } from "react";
 import { X } from "lucide-react"
 import { createPortal } from "react-dom"
 import { cn } from "../../lib/utils"
+import { Button } from "./button";
 
 // Tipos y contexto
 type SheetContextType = {
@@ -27,8 +28,9 @@ const sheetVariants = (side: "top" | "right" | "bottom" | "left" = "right") => {
   const baseStyles = "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out"
   
   const sideStyles = {
-    top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
-    bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+    // Mejoras en el diseño para el Sheet top
+    top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top max-h-[85vh] overflow-y-auto rounded-b-[10px]",
+    bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom max-h-96",
     left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
     right: "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
   }
@@ -45,6 +47,7 @@ interface SheetProps {
 }
 
 const Sheet = ({ children, open: controlledOpen, onOpenChange, defaultOpen = false }: SheetProps) => {
+  // Utilizar defaultOpen para el estado inicial
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
   const id = React.useId()
   
@@ -116,13 +119,14 @@ SheetTrigger.displayName = "SheetTrigger"
 interface SheetCloseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 const SheetClose = React.forwardRef<HTMLButtonElement, SheetCloseProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, className, ...props }, ref) => {
     const { setOpen } = useSheet()
     
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (props.onClick) {
         props.onClick(e)
       }
+      // Aseguramos que siempre cierre el Sheet
       setOpen(false)
     }
     
@@ -131,6 +135,7 @@ const SheetClose = React.forwardRef<HTMLButtonElement, SheetCloseProps>(
         type="button"
         ref={ref}
         onClick={handleClick}
+        className={className}
         {...props}
       >
         {children}

@@ -3,6 +3,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { Check, ChevronRight, Circle } from "lucide-react"
+import { useState } from "react"
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -26,10 +27,11 @@ const ContextMenuContext = React.createContext<{
   setOpen: (open: boolean) => void
   openContextMenu: (x: number, y: number) => void // Nueva función para abrir el menú con posición
   registerSubmenu: (id: string) => void
-  openSubmenu: (id: string) => void
+  openSubmenu: (id: string, triggerElement?: HTMLElement) => void
   closeSubmenu: (id: string) => void
   isSubmenuOpen: (id: string) => boolean
   closeAllSubmenus: () => void
+  activeSubMenuTrigger: React.RefObject<HTMLElement | null> // Añadimos esta referencia
 }>({
   open: false,
   x: 0,
@@ -41,6 +43,7 @@ const ContextMenuContext = React.createContext<{
   closeSubmenu: () => {},
   isSubmenuOpen: () => false,
   closeAllSubmenus: () => {},
+  activeSubMenuTrigger: { current: null }, // Valor por defecto
 })
 
 // Hook para consumir el contexto
@@ -81,6 +84,8 @@ const ContextMenu = ({ children }: ContextMenuProps) => {
   })
   
   const submenuIds = React.useRef<Set<string>>(new Set())
+  // Referencia al trigger del submenú activo para posicionamiento
+  const activeSubMenuTrigger = React.useRef<HTMLElement | null>(null)
   
   const setOpen = React.useCallback((open: boolean) => {
     setState(prev => ({
@@ -94,7 +99,10 @@ const ContextMenu = ({ children }: ContextMenuProps) => {
     submenuIds.current.add(id)
   }, [])
   
-  const openSubmenu = React.useCallback((id: string) => {
+  const openSubmenu = React.useCallback((id: string, triggerElement?: HTMLElement) => {
+    if (triggerElement) {
+      activeSubMenuTrigger.current = triggerElement
+    }
     setState(prev => ({
       ...prev,
       submenuOpen: {
@@ -169,6 +177,7 @@ const ContextMenu = ({ children }: ContextMenuProps) => {
     closeSubmenu,
     isSubmenuOpen,
     closeAllSubmenus,
+    activeSubMenuTrigger, // Pasamos la referencia al contexto
   }), [
     state.open, 
     state.x, 
@@ -583,10 +592,25 @@ const ContextMenuSubTrigger = React.forwardRef<HTMLDivElement, ContextMenuSubTri
     const { id } = useSubMenu()
     const { openSubmenu, isSubmenuOpen } = useContextMenu()
     const isOpen = isSubmenuOpen(id)
+    const triggerRef = React.useRef<HTMLDivElement>(null)
+    
+    // Función para manejar el clic
+    const handleClick = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      if (!disabled && triggerRef.current) {
+        openSubmenu(id, triggerRef.current)
+      }
+    }
     
     return (
       <div
-        ref={ref}
+        ref={(node) => {
+          // Mantener ambas referencias
+          if (typeof ref === 'function') ref(node)
+          else if (ref) ref.current = node
+          triggerRef.current = node
+        }}
         className={cn(
           "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground",
           inset && "pl-8",
@@ -598,8 +622,15 @@ const ContextMenuSubTrigger = React.forwardRef<HTMLDivElement, ContextMenuSubTri
         aria-haspopup="menu"
         aria-expanded={isOpen}
         data-state={isOpen ? "open" : "closed"}
+        data-submenu-id={id}
         tabIndex={disabled ? -1 : 0}
-        onMouseEnter={() => !disabled && openSubmenu(id)}
+        onClick={handleClick} // Reemplazamos hover por clic
+        onKeyDown={(e) => {
+          if ((e.key === "Enter" || e.key === " ") && !disabled && triggerRef.current) {
+            e.preventDefault()
+            openSubmenu(id, triggerRef.current)
+          }
+        }}
         {...props}
       >
         {children}
@@ -616,28 +647,45 @@ interface ContextMenuSubContentProps extends React.HTMLAttributes<HTMLDivElement
 const ContextMenuSubContent = React.forwardRef<HTMLDivElement, ContextMenuSubContentProps>(
   ({ className, children, ...props }, ref) => {
     const { id } = useSubMenu()
-    const { isSubmenuOpen } = useContextMenu()
+    const { isSubmenuOpen, activeSubMenuTrigger } = useContextMenu()
     const isOpen = isSubmenuOpen(id)
-    const triggerRef = React.useRef<HTMLElement | null>(null)
     const [position, setPosition] = useState({ top: 0, left: 0 })
+    const contentRef = React.useRef<HTMLDivElement>(null)
     
-    // Mover el useEffect fuera de la condición para mantener consistente el número de hooks
+    // Calcular y ajustar la posición del submenú
     React.useEffect(() => {
-      if (!isOpen) return
+      if (!isOpen || !activeSubMenuTrigger.current) return
       
-      // Encontrar el trigger para posicionar el submenú
-      const trigger = document.querySelector(`[data-submenu-id="${id}"]`) as HTMLElement
-      if (trigger) {
-        triggerRef.current = trigger
-        const rect = trigger.getBoundingClientRect()
-        
-        // Colocar a la derecha del trigger
-        setPosition({
-          top: rect.top,
-          left: rect.right + 5,
-        })
-      }
-    }, [id, isOpen])
+      const trigger = activeSubMenuTrigger.current
+      const rect = trigger.getBoundingClientRect()
+      const viewportWidth = window.innerWidth
+      const viewportHeight = window.innerHeight
+      
+      // Posición inicial a la derecha del trigger
+      let left = rect.right + 5
+      let top = rect.top
+      
+      // Esperar a que el contenido se renderice para obtener sus dimensiones
+      setTimeout(() => {
+        if (contentRef.current) {
+          const contentRect = contentRef.current.getBoundingClientRect()
+          
+          // Ajustar horizontalmente si se sale de la pantalla
+          if (left + contentRect.width > viewportWidth) {
+            left = rect.left - contentRect.width - 5 // Posicionar a la izquierda del trigger
+          }
+          
+          // Ajustar verticalmente si se sale de la pantalla
+          if (top + contentRect.height > viewportHeight) {
+            top = viewportHeight - contentRect.height - 10
+          }
+          
+          // Actualizar posición
+          setPosition({ top, left })
+        }
+      }, 0)
+      
+    }, [id, isOpen, activeSubMenuTrigger])
     
     if (!isOpen) return null
     
@@ -650,7 +698,7 @@ const ContextMenuSubContent = React.forwardRef<HTMLDivElement, ContextMenuSubCon
           className
         )}
         style={{
-          position: "absolute",
+          position: "fixed", // Cambiado de absolute a fixed
           top: position.top,
           left: position.left,
         }}
@@ -658,7 +706,9 @@ const ContextMenuSubContent = React.forwardRef<HTMLDivElement, ContextMenuSubCon
         onClick={(e) => e.stopPropagation()}
         {...props}
       >
-        {children}
+        <div ref={contentRef}>
+          {children}
+        </div>
       </div>,
       document.body
     )

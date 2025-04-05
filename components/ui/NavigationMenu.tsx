@@ -3,6 +3,7 @@
 import * as React from "react"
 import { ChevronDown } from "lucide-react"
 import { cva } from "class-variance-authority"
+import { useState, useLayoutEffect } from "react"
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -15,6 +16,7 @@ type NavigationMenuContextType = {
   registerMenu: (id: string) => void
   setMenuOpen: (id: string, open: boolean) => void
   isMenuOpen: (id: string) => boolean
+  contentRefs: React.MutableRefObject<Map<string, HTMLDivElement | null>>
 }
 
 const NavigationMenuContext = React.createContext<NavigationMenuContextType>({
@@ -24,6 +26,7 @@ const NavigationMenuContext = React.createContext<NavigationMenuContextType>({
   registerMenu: () => {},
   setMenuOpen: () => {},
   isMenuOpen: () => false,
+  contentRefs: { current: new Map() }
 })
 
 const useNavigationMenu = () => {
@@ -68,6 +71,7 @@ const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuProps>(
     const [openMenus, setOpenMenus] = useState<Set<string>>(new Set())
     const menuIds = React.useRef<Set<string>>(new Set())
     const viewportRef = React.useRef<HTMLDivElement>(null)
+    const contentRefs = React.useRef<Map<string, HTMLDivElement | null>>(new Map())
     
     const registerMenu = React.useCallback((id: string) => {
       menuIds.current.add(id)
@@ -117,6 +121,7 @@ const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuProps>(
       registerMenu,
       setMenuOpen,
       isMenuOpen,
+      contentRefs
     }), [activeMenu, openMenus, registerMenu, setMenuOpen, isMenuOpen])
     
     return (
@@ -130,23 +135,6 @@ const NavigationMenu = React.forwardRef<HTMLDivElement, NavigationMenuProps>(
           {...props}
         >
           {children}
-          <div className={cn("absolute left-0 top-full flex justify-center")}>
-            <div
-              ref={viewportRef}
-              className={cn(
-                "origin-top-center relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--navigation-menu-viewport-width)]",
-                viewportClassName
-              )}
-              style={{
-                height: openMenus.size > 0 ? 'var(--navigation-menu-viewport-height)' : '0',
-                width: openMenus.size > 0 ? 'var(--navigation-menu-viewport-width)' : '0',
-                display: openMenus.size > 0 ? 'block' : 'none',
-                '--navigation-menu-viewport-height': 'var(--radix-navigation-menu-viewport-height)',
-                '--navigation-menu-viewport-width': 'var(--radix-navigation-menu-viewport-width)',
-              } as React.CSSProperties}
-              data-state={openMenus.size > 0 ? "open" : "closed"}
-            />
-          </div>
         </div>
       </NavigationMenuContext.Provider>
     )
@@ -273,20 +261,55 @@ interface NavigationMenuContentProps extends React.HTMLAttributes<HTMLDivElement
 
 const NavigationMenuContent = React.forwardRef<HTMLDivElement, NavigationMenuContentProps>(
   ({ className, ...props }, ref) => {
-    const { id, open } = useNavigationItem()
+    const { id, open, triggerRef } = useNavigationItem()
+    const { contentRefs } = useNavigationMenu()
+    const contentRef = React.useRef<HTMLDivElement | null>(null)
+    const [position, setPosition] = React.useState({ top: 0, left: 0, width: 0 })
+    
+    // Combinar refs
+    const handleRefSet = React.useCallback((node: HTMLDivElement | null) => {
+      contentRef.current = node
+      contentRefs.current.set(id, node)
+      
+      if (typeof ref === 'function') {
+        ref(node)
+      } else if (ref) {
+        ref.current = node
+      }
+    }, [ref, id, contentRefs])
+    
+    // Calcular la posición del contenido basado en el trigger
+    useLayoutEffect(() => {
+      if (open && triggerRef.current) {
+        const rect = triggerRef.current.getBoundingClientRect()
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        
+        setPosition({
+          top: rect.bottom + scrollTop,
+          left: rect.left + scrollLeft,
+          width: rect.width
+        })
+      }
+    }, [open, triggerRef])
     
     if (!open) return null
     
     return (
       <div
-        ref={ref}
+        ref={handleRefSet}
         className={cn(
-          "absolute left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto",
+          "absolute z-[100] min-w-[8rem] rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
           className
         )}
-        data-motion={open ? "from-start" : "to-start"}
+        style={{
+          position: 'fixed',
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+          minWidth: `${position.width}px`,
+          transformOrigin: 'top center'
+        }}
         data-state={open ? "open" : "closed"}
-        data-menu-content={id}
         {...props}
       />
     )

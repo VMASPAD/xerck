@@ -19,9 +19,9 @@ export interface AlertDialogProps {
   /** Variante del botón de acción */
   actionVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   /** Variante del botón de cancelación */
-  cancelVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  cancelVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | "normal" | "info" | "danger" | "success";
   /** Variante del botón que abre el diálogo */
-  triggerVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+  triggerVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | "normal" | "info" | "danger" | "success"  ;
   /** Estado inicial del diálogo (abierto/cerrado) */
   defaultOpen?: boolean;
   /** Función que se ejecuta cuando se confirma la acción */
@@ -38,8 +38,8 @@ const AlertDialog = ({
   actionLabel = "Continuar",
   cancelLabel = "Cancelar",
   triggerLabel = "Abrir diálogo",
-  actionVariant = "default",
-  cancelVariant = "outline",
+  actionVariant = "outline",
+  cancelVariant = "normal",
   triggerVariant = "outline",
   defaultOpen = false,
   onConfirm = () => {},

@@ -13,6 +13,7 @@ import {
   DialogDescription,
 } from "../components/ui/Dialog";
 import { Button } from "../components/ui/button";
+import { useState } from "react";
 
 const meta: Meta<typeof Dialog> = {
   title: "Components/Dialog",
@@ -186,6 +187,42 @@ export const Controlled: Story = {
               </Button>
               <DialogClose asChild>
                 <Button>Aceptar</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  },
+};
+
+export const AnimationExample: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false);
+    
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <Button onClick={() => setOpen(true)}>
+          Ver animación suave desde arriba
+        </Button>
+        
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Animación mejorada</DialogTitle>
+              <DialogDescription>
+                Este diálogo usa una animación más suave que viene desde arriba hacia el centro.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="text-sm text-muted-foreground">
+                La transición usa una curva bezier personalizada para dar un efecto más natural
+                y agradable al aparecer y desaparecer.
+              </p>
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button>Cerrar</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>

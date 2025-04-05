@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { cn } from "../../lib/utils"
+import { useState } from "react"
 
 interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   /**
@@ -129,6 +130,15 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           {...props}
         />
         <div
+          onClick={() => {
+            if (!disabled) {
+              const newChecked = !isChecked;
+              if (checked === undefined) {
+                setInternalChecked(newChecked);
+              }
+              onCheckedChange?.(newChecked);
+            }
+          }}
           className={cn(
             "peer relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors",
             "focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
@@ -163,7 +173,8 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
             htmlFor={switchId}
             className={cn(
               "text-sm font-medium leading-none",
-              disabled && "cursor-not-allowed opacity-70"
+              disabled && "cursor-not-allowed opacity-70",
+              "cursor-pointer"
             )}
           >
             {label}
@@ -177,7 +188,8 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
             htmlFor={switchId}
             className={cn(
               "text-sm font-medium leading-none",
-              disabled && "cursor-not-allowed opacity-70"
+              disabled && "cursor-not-allowed opacity-70",
+              "cursor-pointer"
             )}
           >
             {label}

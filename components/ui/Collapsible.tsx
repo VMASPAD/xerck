@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { ChevronDown } from "lucide-react"
+import { useState } from "react";
 
 // Función de utilidad para combinar clases
 const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
@@ -143,6 +144,7 @@ const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentPr
     const { open } = useCollapsibleContext();
     const contentRef = React.useRef<HTMLDivElement>(null);
     const [height, setHeight] = useState<number | undefined>(undefined);
+    const [isAnimating, setIsAnimating] = useState(false);
     const [isInitialRender, setIsInitialRender] = useState(true);
     
     // Medir la altura del contenido
@@ -162,6 +164,15 @@ const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentPr
       };
     }, []);
     
+    // Manejar el estado de la animación
+    React.useEffect(() => {
+      if (open) {
+        setIsAnimating(true);
+        const timer = setTimeout(() => setIsAnimating(false), 300);
+        return () => clearTimeout(timer);
+      }
+    }, [open]);
+    
     // Evitar la animación en el renderizado inicial si está cerrado
     if (!open && isInitialRender) {
       return null;
@@ -172,13 +183,14 @@ const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentPr
         ref={ref}
         data-state={open ? "open" : "closed"}
         className={cn(
-          "overflow-hidden transition-all duration-200",
-          open ? "animate-collapsible-down" : "animate-collapsible-up",
+          "overflow-hidden transition-all duration-300 ease-in-out",
           className
         )}
         style={{
           // Establecer altura explícita para animación
           height: open ? height : 0,
+          opacity: open ? 1 : 0,
+          transform: `translateY(${open ? 0 : -8}px)`,
         }}
         {...props}
       >

@@ -191,11 +191,11 @@ export const DecorationVariations: Story = {
       <div>
         <h4 className="mb-2 text-sm font-medium">Separador con texto</h4>
         <div className="relative flex items-center">
-          <Separator className="flex-grow" />
+          <Separator className="flex-grow w-20" />
           <span className="mx-2 text-xs text-muted-foreground bg-background px-2">
             Sección nueva
           </span>
-          <Separator className="flex-grow" />
+          <Separator className="flex-grow w-20" />
         </div>
       </div>
     </div>

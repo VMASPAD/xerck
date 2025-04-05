@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import React, { useState } from "react";
 import { createPortal } from "react-dom"
 
 // Función de utilidad para combinar clases

@@ -187,7 +187,7 @@ export const AccordionTrigger = ({ children, className = '' }: AccordionTriggerP
 
   return (
     <button
-      className={`flex justify-between w-full p-4 text-left font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all ${variantTriggerStyles[context.variant]} ${className}`}
+      className={`flex cursor-pointer justify-between w-full p-4 text-left font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all ${variantTriggerStyles[context.variant]} ${className}`}
       onClick={handleClick}
       disabled={disabled}
     >

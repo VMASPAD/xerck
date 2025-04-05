@@ -3,6 +3,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { cn } from "../../lib/utils"
+import { useState } from "react"
 
 // Contexto para el Tooltip
 type TooltipContextType = {
@@ -88,7 +89,7 @@ const Tooltip = ({
   delayDuration: delayDurationProp,
   disableHoverableContent: disableHoverableContentProp,
 }: TooltipProps) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen || false)
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen || false)
   const triggerRef = React.useRef<HTMLElement>(null)
   const contentId = React.useId()
   
