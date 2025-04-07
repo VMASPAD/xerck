@@ -27,7 +27,7 @@ type Story = StoryObj<typeof Sheet>;
 export const Default: Story = {
   render: () => (
     <Sheet>
-      <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+      <SheetTrigger className=" ">
         Abrir Sheet
       </SheetTrigger>
       <SheetContent>
@@ -339,21 +339,21 @@ export const MultiStep: Story = {
 
 export const DefaultOpen: Story = {
   render: () => (
-    <Sheet defaultOpen={false}>
+    <Sheet>
       <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
-        Alternar Sheet (Abierto por defecto)
+        Abrir Sheet
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Sheet abierto por defecto</SheetTitle>
+          <SheetTitle>Sheet</SheetTitle>
           <SheetDescription>
-            Este Sheet se muestra abierto inicialmente gracias a defaultOpen=true
+            Este Sheet solo se abre al hacer clic en el botón
           </SheetDescription>
         </SheetHeader>
         <div className="py-6">
           <p className="text-sm">
-            Este es un ejemplo de un Sheet que está configurado para mostrarse abierto por defecto.
-            Puedes cerrarlo con el botón X o haciendo clic en el overlay.
+            El componente Sheet está configurado para siempre comenzar cerrado 
+            y solo abrirse mediante interacción del usuario con el botón SheetTrigger.
           </p>
         </div>
         <SheetFooter>
@@ -364,4 +364,44 @@ export const DefaultOpen: Story = {
       </SheetContent>
     </Sheet>
   ),
+};
+
+// Agregar un ejemplo nuevo para demostrar el comportamiento
+export const TriggerToggle: Story = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+    
+    return (
+      <>
+        <div className="text-center mb-4">
+          Estado actual: <strong>{isOpen ? "Abierto" : "Cerrado"}</strong>
+        </div>
+        
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+            {isOpen ? "Cerrar Sheet" : "Abrir Sheet"}
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Sheet con botón de alternar</SheetTitle>
+              <SheetDescription>
+                Este ejemplo muestra cómo el Sheet responde a la interacción del usuario
+              </SheetDescription>
+            </SheetHeader>
+            <div className="py-6">
+              <p className="text-sm">
+                El botón exterior cambia su texto dependiendo del estado del Sheet.
+                También puedes cerrar el Sheet con el botón inferior o el ícono X.
+              </p>
+            </div>
+            <SheetFooter>
+              <SheetClose className="bg-primary text-primary-foreground px-4 py-2 rounded-md">
+                Cerrar Sheet
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </>
+    );
+  },
 };

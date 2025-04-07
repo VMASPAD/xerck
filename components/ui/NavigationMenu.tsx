@@ -4,9 +4,7 @@ import * as React from "react"
 import { ChevronDown } from "lucide-react"
 import { cva } from "class-variance-authority"
 import { useState, useLayoutEffect } from "react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
+import { cn } from "@/lib/utils"
 
 // Contexto para el NavigationMenu
 type NavigationMenuContextType = {

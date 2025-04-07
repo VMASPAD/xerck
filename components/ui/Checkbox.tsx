@@ -2,10 +2,7 @@
 
 import * as React from "react"
 import { Check } from "lucide-react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Clases adicionales para personalizar el checkbox

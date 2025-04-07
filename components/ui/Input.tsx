@@ -1,10 +1,7 @@
 "use client"
 
 import * as React from "react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /**
    * Renderiza un contenedor adicional alrededor del input

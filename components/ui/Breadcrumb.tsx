@@ -1,10 +1,6 @@
 import * as React from "react"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => {
-  return classes.filter(Boolean).join(' ')
-}
+import { cn } from "@/lib/utils"
 
 const Breadcrumb = React.forwardRef<
   HTMLElement,

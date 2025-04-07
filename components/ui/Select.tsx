@@ -4,7 +4,7 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
-import { cn } from "../../lib/utils"
+import { cn } from "@/lib/utils"
 import { useState } from "react"
 
 // Contexto del Select

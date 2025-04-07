@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "@/lib/utils"
 
 // Contexto para compartir el estado entre componentes
 interface TabsContextValue {

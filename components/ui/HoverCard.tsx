@@ -2,10 +2,7 @@
 
 import React, { useState } from "react";
 import { createPortal } from "react-dom"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 // Contexto para el HoverCard
 type HoverCardContextType = {
   open: boolean

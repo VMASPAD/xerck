@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react"
 import { createPortal } from "react-dom"
-import { cn } from "../../lib/utils"
-import { Button } from "./button";
+import { cn } from "@/lib/utils"
 
 // Tipos y contexto
 type SheetContextType = {
@@ -25,10 +24,10 @@ function useSheet() {
 
 // Helpers para las variantes
 const sheetVariants = (side: "top" | "right" | "bottom" | "left" = "right") => {
-  const baseStyles = "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out"
+  const baseStyles = "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out duration-300 data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out"
   
   const sideStyles = {
-    // Mejoras en el diseño para el Sheet top
+    // Mejoras en el diseño y animaciones inversas para cada lado
     top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top max-h-[85vh] overflow-y-auto rounded-b-[10px]",
     bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom max-h-96",
     left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
@@ -47,8 +46,8 @@ interface SheetProps {
 }
 
 const Sheet = ({ children, open: controlledOpen, onOpenChange, defaultOpen = false }: SheetProps) => {
-  // Utilizar defaultOpen para el estado inicial
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen)
+  // Forzamos a que siempre comience cerrado, ignorando defaultOpen
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
   const id = React.useId()
   
   const isControlled = controlledOpen !== undefined
@@ -95,9 +94,11 @@ const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
     const { setOpen } = useSheet()
     
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault(); // Prevenir comportamiento por defecto
       if (props.onClick) {
         props.onClick(e)
       }
+      // Siempre abrir el Sheet al hacer clic
       setOpen(true)
     }
     
@@ -121,13 +122,21 @@ interface SheetCloseProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 const SheetClose = React.forwardRef<HTMLButtonElement, SheetCloseProps>(
   ({ children, className, ...props }, ref) => {
     const { setOpen } = useSheet()
+    const [isClosing, setIsClosing] = useState(false)
     
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       if (props.onClick) {
         props.onClick(e)
       }
-      // Aseguramos que siempre cierre el Sheet
-      setOpen(false)
+      
+      // Manejar el cierre con animación
+      setIsClosing(true)
+      // Esperar a que termine la animación antes de cerrar completamente
+      setTimeout(() => {
+        setOpen(false)
+        setIsClosing(false)
+      }, 300)
     }
     
     return (
@@ -184,7 +193,7 @@ const SheetOverlay = React.forwardRef<HTMLDivElement, SheetOverlayProps>(
       <div
         ref={ref}
         className={cn(
-          "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "fixed inset-0 z-50 bg-black/80 duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           className
         )}
         onClick={handleClick}
@@ -206,18 +215,29 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
     const { open, setOpen, id } = useSheet()
     const contentRef = React.useRef<HTMLDivElement>(null)
     const [isMounted, setIsMounted] = useState(false)
+    const [isClosing, setIsClosing] = useState(false)
+    
+    // Manejar el cierre con animación
+    const handleClose = React.useCallback(() => {
+      setIsClosing(true)
+      // Esperar a que termine la animación antes de cerrar completamente
+      setTimeout(() => {
+        setOpen(false)
+        setIsClosing(false)
+      }, 300) // Duración igual a la animación
+    }, [setOpen])
     
     // Manejar el cierre con la tecla Escape
     React.useEffect(() => {
       const handleEscapeKey = (e: KeyboardEvent) => {
         if (e.key === "Escape" && open) {
-          setOpen(false)
+          handleClose()
         }
       }
       
       document.addEventListener("keydown", handleEscapeKey)
       return () => document.removeEventListener("keydown", handleEscapeKey)
-    }, [open, setOpen])
+    }, [open, handleClose])
     
     // Manejar el focus trap
     React.useEffect(() => {
@@ -261,7 +281,8 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
       return () => setIsMounted(false)
     }, [])
     
-    if (!isMounted) return null
+    // No renderizar nada si el Sheet no está abierto o no está montado
+    if ((!isMounted || !open) && !isClosing) return null
     
     return (
       <SheetPortal>
@@ -273,13 +294,16 @@ const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
           aria-labelledby={`${id}-title`}
           aria-describedby={`${id}-description`}
           className={cn(sheetVariants(side), className)}
-          data-state={open ? "open" : "closed"}
+          data-state={isClosing ? "closed" : "open"}
           {...props}
         >
-          <SheetClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <button
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary"
+            onClick={() => handleClose()}
+          >
             <X className="h-4 w-4" />
             <span className="sr-only">Cerrar</span>
-          </SheetClose>
+          </button>
           {children}
         </div>
       </SheetPortal>

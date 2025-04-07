@@ -1,10 +1,7 @@
 "use client"
 
 import * as React from "react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 // Implementación básica de CVA (class-variance-authority) para los estilos de label
 const labelVariants = (className?: string) => {
   return cn(

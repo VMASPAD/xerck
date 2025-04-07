@@ -4,10 +4,7 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { useState } from "react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 // Contexto para el Dialog
 const DialogContext = React.createContext<{
   open: boolean

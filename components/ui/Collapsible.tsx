@@ -3,10 +3,7 @@
 import * as React from "react"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react";
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 interface CollapsibleProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Estado de apertura (controlado)

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { motion, Variants, HTMLMotionProps } from "motion/react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils"
 import { Card, CardProps } from "./Card";
 
 // Redefiniendo CardProps para incluir propiedades de Framer Motion

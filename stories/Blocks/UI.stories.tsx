@@ -1,5 +1,6 @@
 import LayoutUIV1 from "@/components/ui/Blocks/UI/LayoutUIV1";
 import LayoutUIV2 from "@/components/ui/Blocks/UI/LayoutUIV2";
+import LayoutUIV3 from "@/components/ui/Blocks/UI/LayoutUIV3";
 import { StoryObj } from "@storybook/react";
 
 const meta = {
@@ -19,3 +20,7 @@ export const BlockLayoutLoginV1: Story = {
   export const BlockLayoutLoginV2: Story = {
     render: () => <LayoutUIV2 />
     };
+
+    export const BlockLayoutLoginV3: Story = {
+      render: () => <LayoutUIV3 />
+      };

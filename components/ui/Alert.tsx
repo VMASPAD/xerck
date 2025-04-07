@@ -1,6 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { LucideIcon, Terminal } from "lucide-react"
+import { Terminal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 

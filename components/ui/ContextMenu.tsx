@@ -4,10 +4,7 @@ import * as React from "react"
 import { createPortal } from "react-dom"
 import { Check, ChevronRight, Circle } from "lucide-react"
 import { useState } from "react"
-
-// Función de utilidad para combinar clases
-const cn = (...classes: (string | undefined)[]) => classes.filter(Boolean).join(" ")
-
+import { cn } from "@/lib/utils"
 // Tipos comunes
 type ContextMenuItemType = "normal" | "checkbox" | "radio" | "separator" | "label"
 
