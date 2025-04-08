@@ -30,7 +30,7 @@ const Hero = ({
           <p className="mb-8 max-w-xl text-muted-foreground lg:text-xl">
             {description}
           </p>  </BlurFade>
-          <a href="https://portfoliotavm.com"target="_blank" rel="noopener noreferrer">
+          <a href="https://portfoliotavm.com/xerck"target="_blank" rel="noopener noreferrer">
         <Button>
         View Catalog
         </Button></a>
