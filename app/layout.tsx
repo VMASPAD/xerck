@@ -25,7 +25,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`} 
+style={
+    { 
+      "--tx-1": (Math.random() - 0.5),
+      "--ty-1": (Math.random() - 0.5),
+      "--tx-2": (Math.random() - 0.5),
+      "--ty-2": (Math.random() - 0.5),
+      "--tx-3": (Math.random() - 0.5),
+      "--ty-3": (Math.random() - 0.5),
+      "--tx-4": (Math.random() - 0.5),
+      "--ty-4": (Math.random() - 0.5),
+    } as React.CSSProperties
+  } 
+
       >
         {children}
       </body>

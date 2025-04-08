@@ -3,7 +3,7 @@
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
-
+ 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -42,6 +42,9 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-background-gradient: background-gradient;
+
+
 }
 
 :root {
@@ -111,6 +114,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  
 }
 
 @layer base {
@@ -123,11 +127,29 @@
 }
 
 @layer utilities {
+  
   @keyframes collapsible-down {
     from { height: 0 }
     to { height: var(--radix-collapsible-content-height) }
   }
-
+  @keyframes background-gradient {
+    0%, 100% {
+      transform: translate(0, 0);
+      animationDelay: var(--background-gradient-delay, 0s);
+    }
+    20% {
+      transform: translate(calc(100% * var(--tx-1, 1)), calc(100% * var(--ty-1, 1)));
+    }
+    40% {
+      transform: translate(calc(100% * var(--tx-2, -1)), calc(100% * var(--ty-2, 1)));
+    }
+    60% {
+      transform: translate(calc(100% * var(--tx-3, 1)), calc(100% * var(--ty-3, -1)));
+    }
+    80% {
+      transform: translate(calc(100% * var(--tx-4, -1)), calc(100% * var(--ty-4, -1)));
+    }     
+  }
   @keyframes collapsible-up {
     from { height: var(--radix-collapsible-content-height) }
     to { height: 0 }
