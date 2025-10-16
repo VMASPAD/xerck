@@ -1,60 +1,73 @@
-# Xerck
+# React + TypeScript + Vite
 
-Accessible and customizable components that you can copy and paste into your apps. Free. Open Source. **Use this to build your own component library**.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-![hero](https://portfoliotavm.com/imagevscode/xerck.svg)
+Currently, two official plugins are available:
 
-## 🚀 Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- **Accessible**: All components follow best accessibility practices
-- **Customizable**: Easy to adapt to your design system
-- **Reusable**: Copy and paste components directly into your projects
-- **Lightweight**: No unnecessary dependencies
-- **Modern**: Built with the latest web technologies
+## React Compiler
 
-## 📦 Installation
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-No installation needed. Simply copy the components you need and paste them into your project.
+## Expanding the ESLint configuration
 
-```bash
-# Optional: Clone the repository to get all components
-git clone https://github.com/vmaspad/xerck.git
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## 🔨 Usage
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-Each component comes with its own file that you can import directly into your project:
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-```jsx
-import { Button } from './components/Button';
-
-function App() {
-  return (
-    <Button variant="primary">Click me</Button>
-  );
-}
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-## 📚 Available Components
-
-- **Button**: Primary, secondary, and tertiary buttons
-- **Card**: Information containers
-- **Input**: Text fields, text areas, etc.
-- **Modal**: Accessible modal windows
-- **Dropdown**: Dropdown menus
-- **Tabs**: Tab system
-- **Toast**: Non-intrusive notifications
-
-## 🤝 Contributing
-
-Contributions are welcome. Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
- 
----
-
-Developed with ❤️ by [VMASPAD](https://portfoliotavm.com/)
